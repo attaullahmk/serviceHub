@@ -1,0 +1,14 @@
+.service-provider-form {
+    max-width: 600px;
+  }
+  
+  .service-provider-form form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .service-provider-form .form-label {
+    font-weight: 600;
+  }
+  

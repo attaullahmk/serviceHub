@@ -1,0 +1,148 @@
+/servicehub-frontend
+│── /public
+│   ├── /images          # Store static images (optional)
+│   ├── favicon.ico      # App icon
+│   ├── manifest.json    # PWA settings (if needed)
+│── /src
+│   ├── /assets          # Global assets (CSS, images, fonts)
+│   │   ├── /css         # Global styles
+│   │   │   ├── index.css  # Main CSS file (imported in App.jsx)
+│   │   │   ├── theme.css  # Theme variables, colors, etc.
+│   │   │   ├── animations.css  # Custom animations
+│   │   ├── /images      # Store reusable images
+│   │   ├── /fonts       # Store custom fonts
+│   ├── /components      # Reusable UI components
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── ServiceCard.jsx
+│   │   ├── Carousel.jsx
+│   │   ├── Button.jsx
+│   ├── /pages           # Pages for routing
+│   │   ├── Home.jsx
+│   │   ├── ServicesList.jsx
+│   │   ├── ServiceDetail.jsx
+│   │   ├── Profile.jsx
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   ├── /layouts         # Layout components
+│   │   ├── MainLayout.jsx
+│   │   ├── DashboardLayout.jsx
+│   ├── /routes          # Routes for the application
+│   │   ├── AppRoutes.jsx
+│   ├── /context         # Global state (React Context API)
+│   │   ├── AuthContext.jsx
+│   ├── /hooks           # Custom hooks (optional)
+│   │   ├── useAuth.js
+│   │   ├── useFetch.js
+│   ├── /services        # API calls (optional)
+│   │   ├── authService.js
+│   │   ├── serviceService.js
+│   ├── App.jsx          # Root component
+│   ├── main.jsx         # React DOM render
+│── /node_modules        # Dependencies
+│── .gitignore
+│── package.json
+│── vite.config.js
+│── README.md
+
+
+
+
+For your ServiceHub frontend project using React and Bootstrap, the best file structure should be scalable, maintainable, and modular. Here’s a recommended Vite-based file structure while keeping your existing structure in mind.
+
+📂 Recommended File Structure
+bash
+Copy
+Edit
+/servicehub-frontend
+│── /public
+│   ├── /images          # Store static images (optional)
+│   ├── favicon.ico      # App icon
+│   ├── manifest.json    # PWA settings (if needed)
+│── /src
+│   ├── /assets          # Global assets (CSS, images, fonts)
+│   │   ├── /css         # Global styles
+│   │   │   ├── index.css  # Main CSS file (imported in App.jsx)
+│   │   │   ├── theme.css  # Theme variables, colors, etc.
+│   │   │   ├── animations.css  # Custom animations
+│   │   ├── /images      # Store reusable images
+│   │   ├── /fonts       # Store custom fonts
+│   ├── /components      # Reusable UI components
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── ServiceCard.jsx
+│   │   ├── Carousel.jsx
+│   │   ├── Button.jsx
+│   ├── /pages           # Pages for routing
+│   │   ├── Home.jsx
+│   │   ├── ServicesList.jsx
+│   │   ├── ServiceDetail.jsx
+│   │   ├── Profile.jsx
+│   │   ├── Login.jsx
+│   │   ├── Register.jsx
+│   ├── /layouts         # Layout components
+│   │   ├── MainLayout.jsx
+│   │   ├── DashboardLayout.jsx
+│   ├── /routes          # Routes for the application
+│   │   ├── AppRoutes.jsx
+│   ├── /context         # Global state (React Context API)
+│   │   ├── AuthContext.jsx
+│   ├── /hooks           # Custom hooks (optional)
+│   │   ├── useAuth.js
+│   │   ├── useFetch.js
+│   ├── /services        # API calls (optional)
+│   │   ├── authService.js
+│   │   ├── serviceService.js
+│   ├── App.jsx          # Root component
+│   ├── main.jsx         # React DOM render
+│── /node_modules        # Dependencies
+│── .gitignore
+│── package.json
+│── vite.config.js
+│── README.md
+
+
+
+
+📌 Folder Breakdown
+1️⃣ public/
+Store static assets like favicon, manifest.json, and static images.
+Images used in components should go in src/assets/images.
+2️⃣ src/assets/
+CSS files:
+index.css → Import this in main.jsx for global styles.
+theme.css → Define color themes, variables, and Bootstrap overrides.
+animations.css → Store global animations.
+Images: Store general images like logos and backgrounds.
+3️⃣ src/components/
+Re-usable UI components like Navbar.jsx, Footer.jsx, ServiceCard.jsx, Carousel.jsx, Button.jsx, etc.
+These should be independent and reusable.
+4️⃣ src/pages/
+Full pages like Home.jsx, ServicesList.jsx, ServiceDetail.jsx, etc.
+These use multiple components to build layouts.
+5️⃣ src/layouts/
+Contains layout components like:
+MainLayout.jsx → Used for general pages.
+DashboardLayout.jsx → Used for user dashboards.
+6️⃣ src/routes/
+AppRoutes.jsx → Defines all application routes using React Router.
+7️⃣ src/context/
+Manages global state using React Context API (e.g., authentication, theme).
+8️⃣ src/hooks/
+Stores custom React hooks like:
+useAuth.js → Manages user authentication.
+useFetch.js → Handles API fetching.
+9️⃣ src/services/
+API service files for handling backend requests:
+authService.js → Handles login, logout, and authentication.
+serviceService.js → Handles fetching services.
+
+
+
+
+
+how to add style for jsx components 
+ Final Decision
+Storage                                  	Use Case
+With JSX component (Recommended)	  Best for keeping styles modular and easy to maintain.
+In /assets/css/                     	Best for global styles, themes, and shared utilities.

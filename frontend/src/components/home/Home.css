@@ -1,0 +1,50 @@
+.service-card {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 100%; /* Ensures all cards have the same height */
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+  }
+  
+  .service-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .service-image {
+    height: 200px; /* Fixed height for images */
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
+  .card-body-fixed {
+    flex-grow: 1; /* Makes sure all card bodies have equal height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+.row{
+  background-color: #F8F9FA;
+  margin: 0;
+}  
+.container{
+  background-color: #F8F9FA;
+
+}
+.btn-username{
+  background-color: #F8F9FA;
+
+}
+.recent {
+  text-align: center;
+}

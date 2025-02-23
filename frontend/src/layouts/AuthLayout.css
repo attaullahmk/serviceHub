@@ -1,0 +1,44 @@
+/* Background for authentication pages */
+
+  /* Card Styling */
+  .auth-card {
+    width: 400px;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+  }
+  
+  /* Logo */
+  .auth-logo {
+    width: 80px;
+    height: auto;
+    border-radius: 50%;
+  }
+  
+  /* Form Inputs */
+  .auth-card input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Button */
+  .auth-card button {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+    /* margin-top: 300px; */
+  }
+  .auth-card button:hover {
+    background: #0056b3;
+  }
+  .logo{
+    height: 10px;
+  }

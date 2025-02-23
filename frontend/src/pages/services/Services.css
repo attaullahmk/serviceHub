@@ -1,0 +1,73 @@
+.services-container {
+    padding: 2px;
+  }
+  
+  /* Flexbox Layout for Services Page */
+  .services-layout {
+    background-color: #F8F9FA;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  /* Map Section (40% on large screens, 100% on mobile) */
+  .map-container {
+    flex: 0 0 40%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  
+  @media (max-width: 992px) {
+    .map-container {
+      flex: 0 0 100%;
+      height: 400px;
+      position: relative;
+    }
+  }
+  
+  /* Service List Section (60% on large screens, 100% on mobile) */
+  .services-list {
+    flex: 0 0 60%;
+  }
+  
+  @media (max-width: 992px) {
+    .services-list {
+      flex: 0 0 100%;
+    }
+  }
+  
+  /* Service Cards */
+  .service-card {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Carousel Image */
+  .carousel-container {
+    height: 180px; /* Fixed height for images */
+    overflow: hidden;
+  }
+  
+  .service-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  /* Toggle buttons styling */
+.btn-group .btn {
+  transition: all 0.3s ease;
+  border-radius: 20px !important;
+  margin: 0 5px;
+  padding: 8px 25px;
+}
+
+/* Map container transition */
+.map-container, .services-list {
+  transition: opacity 0.3s ease;
+}
+

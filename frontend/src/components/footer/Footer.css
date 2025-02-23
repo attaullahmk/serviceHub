@@ -1,0 +1,43 @@
+/* Updated Footer.css */
+a{
+    padding: 21px;
+}
+.footer {
+    text-align: center; /* Center align footer */
+    padding: 2px; /* Add padding */
+    background-color: #333; /* Dark background */
+    color: white; /* Light text */
+    
+}
+
+.footer-icons {
+    display: flex; /* Align icons */
+    justify-content: center; /* Center icons */
+    margin-bottom: 10px; /* Space below icons */
+}
+
+.footer-info {
+    text-align: center; /* Center align text */
+    color: #ccc; /* Lighten text color */
+}
+/* Fix for unwanted horizontal scrolling */
+body, html {
+    overflow-x: hidden;  /* Prevents horizontal scrolling */
+    width: 100vw;  /* Ensures full viewport width */
+  }
+  
+  /* Ensure footer stretches full width */
+  .footer {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Optional: Centering and padding */
+  .footer-container {
+    max-width: 1200px;
+    margin:  auto; /* Centers content */
+    padding: 10px;
+    text-align: center;
+  }
+  

@@ -236,7 +236,25 @@ const searchServices = async (req, res) => {
 
 
 
-
+// Get services by provider ID
+const getServicesByProviderId = async (req, res) => {
+  try {
+    const { providerId } = req.params;
+    const services = await Service.find({ provider: providerId }).populate("provider", "name email");
+    
+    if (!services || services.length === 0) {
+      return res.status(404).json({ success: false, message: "No services found for this provider" });
+    }
+// console.log("serives", services);    
+    res.status(200).json({
+      success: true,
+      services,
+    });
+  } catch (error) {
+    console.error("Error fetching services by provider ID:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 
 
 
@@ -318,6 +336,7 @@ module.exports = {
   updateServiceById,
   deleteServiceById,
   searchServices,
+  getServicesByProviderId,
   getTopRatedServices, // Added new route
   getLatestServices, // Added new route
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -20,11 +20,39 @@ const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const checkGoogleLogin = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+
+      if (token) {
+        localStorage.setItem("authToken", token);
+        window.history.replaceState({}, "", "/signup");
+
+        try {
+          const response = await axios.get("http://localhost:3000/api/auth/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const user = response.data.user;
+          dispatch(loginSuccess({ user, token }));
+          navigate("/services");
+        } catch (err) {
+          navigate("/login");
+        }
+      }
+    };
+
+    checkGoogleLogin();
+  }, [dispatch, navigate]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const sendOtp = async () => {
+  const sendOtp = async (e) => {
+    e.preventDefault();
+    setError("");
     try {
       await axios.post("http://localhost:3000/api/auth/send-otp", { email: formData.email });
       setOtpSent(true);
@@ -40,13 +68,16 @@ const Signup = () => {
     try {
       const response = await axios.post("http://localhost:3000/api/auth/verify-otp", formData);
       const { token, user } = response.data;
-
       localStorage.setItem("authToken", token);
       dispatch(loginSuccess({ user, token }));
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed!");
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:3000/api/auth/google";
   };
 
   return (
@@ -57,17 +88,15 @@ const Signup = () => {
         {error && <div className="alert alert-danger">{error}</div>}
 
         {!otpSent ? (
-          <form onSubmit={(e) => { e.preventDefault(); sendOtp(); }}>
+          <form onSubmit={sendOtp}>
             <div className="mb-3">
               <label className="form-label">Full Name</label>
               <input type="text" className="form-control" name="name" value={formData.name} onChange={handleChange} required />
             </div>
-
             <div className="mb-3">
               <label className="form-label">Email</label>
               <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} required />
             </div>
-
             <button type="submit" className="btn btn-primary w-100">Send OTP</button>
           </form>
         ) : (
@@ -76,15 +105,23 @@ const Signup = () => {
               <label className="form-label">OTP</label>
               <input type="text" className="form-control" name="otp" value={formData.otp} onChange={handleChange} required />
             </div>
-
             <div className="mb-3">
               <label className="form-label">Password</label>
               <input type="password" className="form-control" name="password" value={formData.password} onChange={handleChange} required />
             </div>
-
             <button type="submit" className="btn btn-primary w-100">Verify OTP & Sign Up</button>
           </form>
         )}
+
+        <div className="google-signin mt-3 text-center">
+          <button onClick={handleGoogleLogin} className="btn btn-danger w-100">
+            Sign up with Google
+          </button>
+        </div>
+
+        <p className="mt-3 text-center">
+          Already have an account? <a href="/login">Login</a>
+        </p>
       </div>
     </div>
   );

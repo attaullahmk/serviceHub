@@ -8,6 +8,7 @@ import ReviewForm from "./ReviewForm";
 import ReviewList from "./ReviewList";
 import { useSelector } from "react-redux";
 import Message from "../../pages/messages/Messages";
+import BookingForm from "../bookings/BookingForm"; // Import Booking Form
 
 const ServiceDetail = () => {
   const { id } = useParams();
@@ -52,9 +53,7 @@ const ServiceDetail = () => {
   }
 
   const isOwner = user?._id === service.service.provider._id;
-// console.log("sender",user._id)
-// console.log("sesever",service.service.provider._id)
-console.log("sesever",service.service)
+
   return (
     <Container className="service-detail-container my-5">
       <Row className="justify-content-center">
@@ -83,13 +82,12 @@ console.log("sesever",service.service)
             <p><strong>Category:</strong> {service.service.category}</p>
             <p><strong>Address:</strong> {service.service.address}</p>
             <p>
-              <strong>Availability:</strong> {" "}
+              <strong>Availability:</strong>{" "}
               <Badge bg={service.service.availability ? "success" : "danger"}>
                 {service.service.availability ? "Available" : "Not Available"}
               </Badge>
             </p>
-            <p><strong>averageRating:</strong> <span className="text-warning"> ★ {service.service.averageRating}</span></p>
-            {/* <span className="text-warning"> ★ {service.service.averageRating}</span> */}
+            <p><strong>Average Rating:</strong> <span className="text-warning"> ★ {service.service.averageRating}</span></p>
 
             {/* Buttons for Edit and Delete (Visible only for owner) */}
             {isOwner && (
@@ -109,6 +107,10 @@ console.log("sesever",service.service)
               </div>
             )}
 
+            {/* Booking Form (Added Below Service Details) */}
+            {!isOwner && <BookingForm serviceId={service.service._id} userId={user?._id} service={service} />}
+
+            {/* Review Section */}
             <ReviewList serviceId={service.service._id} user={user} />
             <ReviewForm serviceId={service.service._id} />
           </Card>
@@ -121,13 +123,8 @@ console.log("sesever",service.service)
           </div>
         </Col>
 
-
         {/* Add a wrapper div around Message */}
-        
-        {console.log("provideriddddd", service.service.provider._id)}
-      <Message   receiverId={service.service.provider._id } />
-
-
+        <Message receiverId={service.service.provider._id} />
       </Row>
     </Container>
   );

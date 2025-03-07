@@ -1,9 +1,19 @@
 const Booking = require("../models/booking");
+const Service = require("../models/service");
 const ExpressError = require("../utils/ExpressError");
+const { bookingSchema, partialBookingSchema } = require("../schemas/bookingSchema");
 
-// Create a new booking
+// ✅ Create a new booking
 const createBooking = async (req, res) => {
+  console.log(req.body);
+  const { error } = bookingSchema.validate(req.body);
+  if (error) throw new ExpressError(400, error.details[0].message);
+
   const { user, service, provider, bookingDate, totalPrice } = req.body;
+
+  // Validate service existence
+  const serviceExists = await Service.findById(service);
+  if (!serviceExists) throw new ExpressError(404, "Service not found");
 
   const booking = new Booking({
     user,
@@ -22,7 +32,7 @@ const createBooking = async (req, res) => {
   });
 };
 
-// Get all bookings
+// ✅ Get all bookings
 const getAllBookings = async (req, res) => {
   const bookings = await Booking.find().populate("user service provider");
 
@@ -32,15 +42,13 @@ const getAllBookings = async (req, res) => {
   });
 };
 
-// Get booking by ID
+// ✅ Get booking by ID
 const getBookingById = async (req, res) => {
   const { id } = req.params;
 
   const booking = await Booking.findById(id).populate("user service provider");
 
-  if (!booking) {
-    throw new ExpressError(404, "Booking not found");
-  }
+  if (!booking) throw new ExpressError(404, "Booking not found");
 
   res.status(200).json({
     success: true,
@@ -48,9 +56,12 @@ const getBookingById = async (req, res) => {
   });
 };
 
-// Update booking status by ID
+// ✅ Update booking status by ID
 const updateBookingStatus = async (req, res) => {
   const { id } = req.params;
+  const { error } = partialBookingSchema.validate(req.body);
+  if (error) throw new ExpressError(400, error.details[0].message);
+
   const { status } = req.body;
 
   const booking = await Booking.findByIdAndUpdate(
@@ -59,9 +70,7 @@ const updateBookingStatus = async (req, res) => {
     { new: true }
   ).populate("user service provider");
 
-  if (!booking) {
-    throw new ExpressError(404, "Booking not found");
-  }
+  if (!booking) throw new ExpressError(404, "Booking not found");
 
   res.status(200).json({
     success: true,
@@ -70,15 +79,14 @@ const updateBookingStatus = async (req, res) => {
   });
 };
 
-// Delete booking by ID
+// ✅ Delete booking by ID
 const deleteBookingById = async (req, res) => {
+
   const { id } = req.params;
 
   const booking = await Booking.findByIdAndDelete(id);
 
-  if (!booking) {
-    throw new ExpressError(404, "Booking not found");
-  }
+  if (!booking) throw new ExpressError(404, "Booking not found");
 
   res.status(200).json({
     success: true,
@@ -86,10 +94,30 @@ const deleteBookingById = async (req, res) => {
   });
 };
 
+
+// ✅ Get all bookings for a specific user
+const getUserBookings = async (req, res) => {
+  const { userId } = req.params;
+  console.log("userid ", userId);
+
+  const bookings = await Booking.find({ user: userId }).populate("service provider");
+
+  if (!bookings.length) throw new ExpressError(404, "No bookings found for this user");
+
+  res.status(200).json({
+    success: true,
+    data: bookings,
+  });
+};
+
+
+
+
 module.exports = {
   createBooking,
   getAllBookings,
   getBookingById,
   updateBookingStatus,
   deleteBookingById,
+  getUserBookings, // Add this line
 };

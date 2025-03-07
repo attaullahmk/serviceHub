@@ -6,10 +6,11 @@ const bookingSchema = Joi.object({
   provider: Joi.string().required(), // Provider ID
   bookingDate: Joi.date().required(),
   totalPrice: Joi.number().min(0).required(),
+  specialRequests: Joi.string().allow(""), // Optional field
 });
 
 const partialBookingSchema = Joi.object({
-  status: Joi.string().valid("pending", "confirmed", "completed", "cancelled").required(),
+  status: Joi.string().valid("pending", "confirmed", "completed", "canceled").required(),
 });
 
 module.exports = { bookingSchema, partialBookingSchema };

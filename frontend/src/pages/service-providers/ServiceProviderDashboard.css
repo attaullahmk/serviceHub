@@ -1,0 +1,26 @@
+.provider-dashboard {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .provider-dashboard .card {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .provider-dashboard .badge {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+  
+  .provider-dashboard .table {
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .provider-dashboard .btn {
+    border-radius: 5px;
+  }
+  

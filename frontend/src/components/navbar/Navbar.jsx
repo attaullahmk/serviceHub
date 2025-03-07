@@ -220,6 +220,15 @@ const Navbar = () => {
                         Create Service
                       </Link>
                     )}
+                    {user.role === "provider" && (
+                      <Link
+                        className="popover-item"
+                        to="/provider/dashboard"
+                        onClick={() => setShowAuthPopover(false)}
+                      >
+                        Dashboard
+                      </Link>
+                    )}
                     <button className="popover-item" onClick={handleLogout}>
                       Logout
                     </button>

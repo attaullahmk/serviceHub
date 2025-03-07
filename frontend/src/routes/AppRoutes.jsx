@@ -14,7 +14,7 @@ import Login from "../pages/auth/Login";
 import ForgotPassword from "../pages/auth/ForgotPassword";  // Import Forgot Password Page
 import ResetPassword from "../pages/auth/ResetPassword";  // Import Reset Password Page
 import Signup from "../pages/auth/Signup";
-import ServiceProviderDashboard from "../pages/service-providers/Dashboard";
+import ServiceProviderDashboard from "../pages/service-providers/ServiceProviderDashboard";
 import Services from "../pages/services/Services";
 import ServiceDetail from "../pages/services/ServiceDetail";
 import EditServiceForm from "../pages/services/EditServiceForm";

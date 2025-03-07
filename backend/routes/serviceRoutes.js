@@ -8,8 +8,7 @@ const {
   searchServices,
   getTopRatedServices,
   getLatestServices,
-
-
+  getServicesByProviderId // New function to fetch services by provider ID
 } = require("../controllers/serviceController");
 const { serviceSchema, partialServiceSchema } = require("../schemas/serviceSchema");
 const validateSchema = require("../middlewares/validateSchema");
@@ -31,10 +30,10 @@ router.put("/:id",
   wrapAsync(updateServiceById)
 );
 
-
 router.get("/search", wrapAsync(searchServices));
 router.get("/latest", wrapAsync(getLatestServices)); // Get latest services
 router.get("/top-rated", wrapAsync(getTopRatedServices)); // Get top-rated services
+router.get("/provider/:providerId", wrapAsync(getServicesByProviderId)); // New route to get services by provider ID
 router.get("/", wrapAsync(getAllServices));
 router.get("/:id", wrapAsync(getServiceById));
 router.delete("/:id", wrapAsync(deleteServiceById));

@@ -1,5 +1,9 @@
-const ServiceProvider = require("../models/serviceProvider");
-const ExpressError = require("../utils/ExpressError");
+// const ServiceProvider = require("../models/serviceProvider");
+// const User = require("../models/user");
+// const ExpressError = require("../utils/ExpressError");
+const Service = require('../models/Service');
+const ServiceProvider = require('../models/ServiceProvider');
+const ExpressError = require('../utils/ExpressError');
 
 // Create a new service provider
 const createServiceProvider = async (req, res, next) => {
@@ -52,6 +56,7 @@ const getAllServiceProviders = async (req, res, next) => {
 const getServiceProviderById = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log("Service Provider ID:", id);
     const serviceProvider = await ServiceProvider.findById(id).populate("user", "name email");
 
     if (!serviceProvider) {
@@ -126,7 +131,79 @@ const deleteServiceProviderById = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+}; 
+
+// Get service provider dashboard details by user ID
+// const getServiceProviderDashboard = async (req, res, next) => {
+//   try {
+//     const { id } = req.params; // User ID
+//     console.log("User ID:", id);
+
+//     // Find the service provider using the user ID
+//     const serviceProvider = await ServiceProvider.findOne({ user: id })
+//       .populate("user", "name email")
+//       .populate("services"); // Fetch associated services
+
+//     if (!serviceProvider) {
+//       throw new ExpressError(404, "Service Provider not found");
+//     }
+
+//     console.log(serviceProvider.services)
+//     res.status(200).json({
+//       success: true,
+//       message: "Service Provider dashboard fetched successfully",
+//       dashboard: {
+//         providerDetails: {
+//           name: serviceProvider.user.name,
+//           email: serviceProvider.user.email,
+//           phone: serviceProvider.phone,
+//           address: serviceProvider.address,
+//           availability: serviceProvider.availability,
+//         },
+//         services: Services, // List of services
+//       },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+// Get service provider dashboard details by user ID
+const getServiceProviderDashboard = async (req, res, next) => {
+  try {
+    const { id } = req.params; // User ID
+    console.log("User ID:", id);
+
+    // Find the service provider using the user ID and populate user details
+    const serviceProvider = await ServiceProvider.findOne({ user: id })
+      .populate("user", "name email");
+
+      console.log(serviceProvider)
+
+    if (!serviceProvider) {
+      throw new ExpressError(404, "Service Provider not found");
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Service Provider details fetched successfully",
+      providerDetails: {
+        name: serviceProvider.user.name,
+        email: serviceProvider.user.email,
+        phone: serviceProvider.phone,
+        address: serviceProvider.address,
+        // availability: serviceProvider.availability,
+        availability: serviceProvider.availability ?? false, // Fallback if missing
+
+      },
+      
+    });
+  } catch (error) {
+    next(error);
+  }
 };
+
+
 
 module.exports = {
   createServiceProvider,
@@ -134,4 +211,7 @@ module.exports = {
   getServiceProviderById,
   updateServiceProviderById,
   deleteServiceProviderById,
+  getServiceProviderDashboard, // Added this function
 };
+
+

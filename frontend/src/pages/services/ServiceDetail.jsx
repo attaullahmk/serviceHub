@@ -53,7 +53,7 @@ const ServiceDetail = () => {
   }
 
   const isOwner = user?._id === service.service.provider._id;
-
+console.log(user);
   return (
     <Container className="service-detail-container my-5">
       <Row className="justify-content-center">
@@ -124,7 +124,7 @@ const ServiceDetail = () => {
         </Col>
 
         {/* Add a wrapper div around Message */}
-        <Message receiverId={service.service.provider._id} />
+        <Message receiverId={service.service.provider._id}  serviceId={service.service._id}/>
       </Row>
     </Container>
   );

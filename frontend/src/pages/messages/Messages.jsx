@@ -1,26 +1,46 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { Button, Card, Form, InputGroup, ListGroup } from "react-bootstrap";
+import { Button, Card, Form, InputGroup, ListGroup, Badge } from "react-bootstrap";
 import { FiMessageSquare, FiSend } from "react-icons/fi";
+import { io } from "socket.io-client";
 import "./Messages.css";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const MessageBox = ({ receiverId }) => {
+const MessageBox = ({ receiverId, serviceId }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const messageBoxRef = useRef(null);
   const messagesEndRef = useRef(null);
-  const { user } = useSelector((state) => state.auth); // Get user from Redux
+  const { user } = useSelector((state) => state.auth);
   const senderId = user ? user._id : null;
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
+  const socket = useRef(null);
+
+  useEffect(() => {
+    socket.current = io("http://localhost:3000");
+
+    if (senderId) {
+      socket.current.emit("join", senderId);
+    }
+
+    socket.current.on("onlineUsers", (users) => {
+      setOnlineUsers(users);
+    });
+
+    return () => {
+      socket.current.disconnect();
+    };
+  }, [senderId]);
+
+  
 
   const handleToggleVisibility = () => {
     if (!senderId) {
-      // Redirect to login page if senderId is null
       navigate("/login");
     } else {
       setIsVisible(!isVisible);
@@ -61,29 +81,12 @@ const MessageBox = ({ receiverId }) => {
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/conversations/${senderId}/${receiverId}`);
+      const response = await axios.get(`http://localhost:3000/api/conversations/sender/${senderId}/service/${serviceId}`);
       if (response.data.success) {
-        setSelectedConversation(response.data.data);
-      } else {
-        createConversation();
+        setConversations(response.data.data);
       }
     } catch (error) {
-      console.error("Error fetching conversation:", error);
-      createConversation();
-    }
-  };
-
-  const createConversation = async () => {
-    try {
-      console.log("creat", senderId, receiverId);
-      const response = await axios.post("http://localhost:3000/api/conversations", {
-        participants: [senderId, receiverId],
-      });
-      if (response.data.success) {
-        setSelectedConversation(response.data.data);
-      }
-    } catch (error) {
-      console.error("Error creating conversation:", error);
+      console.error("Error fetching conversations:", error);
     }
   };
 
@@ -95,6 +98,22 @@ const MessageBox = ({ receiverId }) => {
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
+    }
+  };
+
+  const createConversation = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/api/conversations", {
+        participants: [senderId, receiverId],
+        service: serviceId,
+      });
+
+      if (response.data.success) {
+        setConversations([...conversations, response.data.data]);
+        setSelectedConversation(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error creating conversation:", error);
     }
   };
 
@@ -112,6 +131,7 @@ const MessageBox = ({ receiverId }) => {
       if (response.data.success) {
         setMessages([...messages, response.data.data]);
         setNewMessage("");
+        fetchMessages(selectedConversation._id);
       }
     } catch (error) {
       console.error("Error sending message:", error);
@@ -131,24 +151,7 @@ const MessageBox = ({ receiverId }) => {
       {isVisible && (
         <Card ref={messageBoxRef} className="position-fixed bottom-0 end-0 m-3 p-3 message-box">
           <Card.Body>
-            <Card.Title className="text-center">Chat</Card.Title>
-            {!selectedConversation ? (
-              <ListGroup>
-                {conversations.length === 0 ? (
-                  <p className="text-muted text-center">No conversations yet...</p>
-                ) : (
-                  conversations.map((conv) => (
-                    <ListGroup.Item
-                      key={conv._id}
-                      action
-                      onClick={() => setSelectedConversation(conv)}
-                    >
-                      {conv.participants.find((p) => p._id !== senderId)?.name || "Unknown"}
-                    </ListGroup.Item>
-                  ))
-                )}
-              </ListGroup>
-            ) : (
+            {selectedConversation ? (
               <>
                 <Button variant="secondary" size="sm" onClick={() => setSelectedConversation(null)}>
                   Back to Conversations
@@ -162,7 +165,7 @@ const MessageBox = ({ receiverId }) => {
                         key={index}
                         className={`message ${msg.sender._id === senderId ? "sent" : "received"}`}
                       >
-                        <strong>{msg.sender._id === senderId ? "You" : msg.receiver?.name || "Unknown"}:</strong> {msg.content}
+                        <strong>{msg.sender._id === senderId ? "You" : msg.sender?.name || "Unknown"}:</strong> {msg.content}
                       </div>
                     ))
                   )}
@@ -181,6 +184,30 @@ const MessageBox = ({ receiverId }) => {
                     <FiSend />
                   </Button>
                 </InputGroup>
+              </>
+            ) : (
+              <>
+                <Card.Title className="text-center">Your Conversations</Card.Title>
+                {conversations.length === 0 ? (
+                  <div className="text-center">
+                    <p className="text-muted">No conversations found.</p>
+                    <Button variant="primary" onClick={createConversation}>
+                      Start a Conversation
+                    </Button>
+                  </div>
+                ) : (
+                  <ListGroup>
+                    {conversations.map((conv) => {
+                      const participant = conv.participants.find((p) => p._id !== senderId);
+                      return (
+                        <ListGroup.Item key={conv._id} action onClick={() => setSelectedConversation(conv)}>
+                          Chat with {participant?.name || "Unknown"}
+                          {onlineUsers.includes(participant?._id) && <Badge bg="success" className="ms-2">Online</Badge>}
+                        </ListGroup.Item>
+                      );
+                    })}
+                  </ListGroup>
+                )}
               </>
             )}
           </Card.Body>

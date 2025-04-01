@@ -126,7 +126,8 @@ console.log("EERROORR")
 
 // 404 Handler
 app.all("*", (req, res, next) => {
-  next(new ExpressError(404, "Page not found"));
+  // next(new ExpressError(404, "Page not found"));
+  console.log("hi")
 });
  
 // Export the app

@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
-const MONGO_URL = "mongodb://127.0.0.1:27017/serviceHub";
+require("dotenv").config(); // Load environment variables
 
-
-connectDB()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+const MONGO_URL = process.env.MONGO_URL; // Read from .env
 
 async function connectDB() {
-  await mongoose.connect(MONGO_URL);
-}
+  try {
+    await mongoose.connect(MONGO_URL); // No extra options needed
+    console.log("✅ MongoDB Connected Successfully!");
+  } catch (error) {
+    console.error("❌ MongoDB Connection Error:", error);
+    process.exit(1); // Exit if connection fails
+  }
+} 
+
 module.exports = connectDB;

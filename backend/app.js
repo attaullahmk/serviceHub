@@ -69,9 +69,11 @@ app.get("/profile", authenticateJWT, (req, res) => {
   });
 });
 
-// Default route
+// Default route 
 app.get("/", (req, res) => {
   res.send('<a href="http://localhost:3000/api/auth/google">Sign in with Google</a>');
+  // res.send(<h1> this is api </h1>)
+
 });
 
 // Google OAuth routes (unchanged)

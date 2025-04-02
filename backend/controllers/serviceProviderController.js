@@ -2,7 +2,7 @@
 // const User = require("../models/user");
 // const ExpressError = require("../utils/ExpressError");
 // const Service = require('../models/service');
-const ServiceProvider = require('../models/ServiceProvider');
+const ServiceProvider = require('../models/serviceProvider');
 const ExpressError = require('../utils/ExpressError');
 
 // Create a new service provider

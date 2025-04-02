@@ -1,7 +1,7 @@
 // const ServiceProvider = require("../models/serviceProvider");
 // const User = require("../models/user");
 // const ExpressError = require("../utils/ExpressError");
-const Service = require('../models/Service');
+// const Service = require('../models/service');
 const ServiceProvider = require('../models/ServiceProvider');
 const ExpressError = require('../utils/ExpressError');
 

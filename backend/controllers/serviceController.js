@@ -2,7 +2,7 @@
 // const ExpressError = require("../utils/ExpressError");
 
 // Create a new service
-const Service = require("../models/Service");
+const Service = require("../models/service");
 
 
 const ExpressError = require("../utils/ExpressError");

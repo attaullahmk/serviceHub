@@ -112,6 +112,6 @@ serviceSchema.methods.incrementViews = async function () {
 };
 
 
-// const Service = mongoose.model("Service", serviceSchema);
+const Service = mongoose.model("Service", serviceSchema);
 // module.exports = Service;
-module.exports = mongoose.models.Service || mongoose.model('Service', serviceSchema);
+// module.exports = mongoose.models.Service || mongoose.model('Service', serviceSchema);

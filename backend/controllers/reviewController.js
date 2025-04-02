@@ -1,5 +1,7 @@
 const Review = require("../models/review");
-const Service = require("../models/service");
+// const Service = require("../models/service");
+const Service = require('../models/Service'); // If file is "service.js"
+
 const ExpressError = require("../utils/ExpressError");
 
 // Create a new review

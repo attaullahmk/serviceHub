@@ -202,6 +202,8 @@ const MessageBox = ({ receiverId, serviceId }) => {
                       return (
                         <ListGroup.Item key={conv._id} action onClick={() => setSelectedConversation(conv)}>
                           Chat with {participant?.name || "Unknown"}
+                          {console.log("Participant:", participant)}
+
                           {onlineUsers.includes(participant?._id) && <Badge bg="success" className="ms-2">Online</Badge>}
                         </ListGroup.Item>
                       );

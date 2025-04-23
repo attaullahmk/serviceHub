@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { FiBell } from "react-icons/fi";
 import { Search } from "lucide-react";
 // import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,13 +20,13 @@ const Navbar = () => {
 
   // List of available categories
   const categories = [
-    "Delivery",
+    // "Delivery",
     "Contractors",
     "Electricians",
     "Plumbers",
     "Movers",
     "Auto Repair",
-    "Parking",
+    // "Parking",
   ];
 
   // Access user data from Redux
@@ -186,6 +187,12 @@ const Navbar = () => {
                         Create Service
                       </Link>
                     )}
+                    {/* Notification Icon in the middle */}
+<FiBell
+  size={24}
+  className="mx-3 text-primary"
+  style={{ cursor: "pointer" }}
+/>
                 <button
                   onClick={() => setShowAuthPopover((prev) => !prev)}
                   className="btn btn-primary btn-rounded btn-username"
@@ -200,6 +207,13 @@ const Navbar = () => {
                       onClick={() => setShowAuthPopover(false)}
                     >
                       Profile
+                    </Link>
+                    <Link
+                      className="popover-item"
+                      to="/bookings"
+                      onClick={() => setShowAuthPopover(false)}
+                    >
+                      Bookings
                     </Link>
 
                     {user.role !== "provider" && (

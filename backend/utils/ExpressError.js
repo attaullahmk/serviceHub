@@ -4,7 +4,7 @@ class ExpressError extends Error {
       this.status = status;
   
       // Capture the stack trace for debugging purposes
-      Error.captureStackTrace(this, this.constructor);
+      // Error.captureStackTrace(this, this.constructor);
     }
   }
   

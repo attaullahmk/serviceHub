@@ -59,10 +59,13 @@ const getBookingById = async (req, res) => {
 // ✅ Update booking status by ID
 const updateBookingStatus = async (req, res) => {
   const { id } = req.params;
+  console.log("id ", id);
+  console.log("req.body ", req.body);
   const { error } = partialBookingSchema.validate(req.body);
   if (error) throw new ExpressError(400, error.details[0].message);
 
   const { status } = req.body;
+  console.log("status ", status);
 
   const booking = await Booking.findByIdAndUpdate(
     id,
@@ -110,6 +113,20 @@ const getUserBookings = async (req, res) => {
   });
 };
 
+// ✅ Get all bookings for a specific provider
+const getProviderBookings = async (req, res) => {
+  const { providerId } = req.params;
+
+  const bookings = await Booking.find({ provider: providerId }).populate("user service");
+
+  if (!bookings.length) throw new ExpressError(404, "No bookings found for this provider");
+
+  res.status(200).json({
+    success: true,
+    data: bookings,
+  });
+};
+
 
 
 
@@ -120,4 +137,5 @@ module.exports = {
   updateBookingStatus,
   deleteBookingById,
   getUserBookings, // Add this line
+  getProviderBookings, // ✅ Add this line
 };

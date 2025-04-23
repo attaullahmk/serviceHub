@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Card, ListGroup, Button, Form } from "react-bootstrap";
-import ReactStars from "react-stars"; // Import react-stars
+import { Card, ListGroup, Button, Form, Modal } from "react-bootstrap";
+import ReactStars from "react-stars";
 
 const ReviewList = ({ serviceId, newReview, user }) => {
   const [reviews, setReviews] = useState([]);
@@ -10,14 +10,19 @@ const ReviewList = ({ serviceId, newReview, user }) => {
   const [editingReview, setEditingReview] = useState(null);
   const [editedComment, setEditedComment] = useState("");
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 5;
+
+  // Modal state
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/services/${serviceId}`);
+        const response = await axios.get(
+          `http://localhost:3000/api/services/${serviceId}`
+        );
         if (response.data.success && response.data.service) {
           setReviews(response.data.service.reviews);
         } else {
@@ -36,31 +41,34 @@ const ReviewList = ({ serviceId, newReview, user }) => {
     }
   }, [newReview]);
 
-  // Sort Reviews based on user selection
   const sortedReviews = [...reviews].sort((a, b) => {
-    if (sortOption === "latest") {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    } else if (sortOption === "highest") {
-      return b.rating - a.rating;
-    } else if (sortOption === "lowest") {
-      return a.rating - b.rating;
-    }
+    if (sortOption === "latest") return new Date(b.createdAt) - new Date(a.createdAt);
+    if (sortOption === "highest") return b.rating - a.rating;
+    if (sortOption === "lowest") return a.rating - b.rating;
     return 0;
   });
 
-  // Paginated Reviews
   const totalPages = Math.ceil(sortedReviews.length / reviewsPerPage);
-  const paginatedReviews = sortedReviews.slice((currentPage - 1) * reviewsPerPage, currentPage * reviewsPerPage);
+  const paginatedReviews = sortedReviews.slice(
+    (currentPage - 1) * reviewsPerPage,
+    currentPage * reviewsPerPage
+  );
 
-  const handleDeleteReview = async (reviewId) => {
-    if (window.confirm("Are you sure you want to delete this review?")) {
-      try {
-        await axios.delete(`http://localhost:3000/api/reviews/${reviewId}`);
-        setReviews(reviews.filter((review) => review._id !== reviewId));
-      } catch (error) {
-        console.error("Error deleting review:", error);
-        alert("Failed to delete review.");
-      }
+  const confirmDelete = (reviewId) => {
+    setReviewToDelete(reviewId);
+    setShowConfirmModal(true);
+  };
+
+  const handleDeleteConfirmed = async () => {
+    try {
+      await axios.delete(`http://localhost:3000/api/reviews/${reviewToDelete}`);
+      setReviews(reviews.filter((r) => r._id !== reviewToDelete));
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      alert("Failed to delete review.");
+    } finally {
+      setShowConfirmModal(false);
+      setReviewToDelete(null);
     }
   };
 
@@ -71,13 +79,16 @@ const ReviewList = ({ serviceId, newReview, user }) => {
 
   const handleEditSubmit = async (reviewId) => {
     try {
-      const response = await axios.put(`http://localhost:3000/api/reviews/${reviewId}`, {
-        comment: editedComment,
-      });
+      const response = await axios.put(
+        `http://localhost:3000/api/reviews/${reviewId}`,
+        { comment: editedComment }
+      );
       if (response.data.success) {
-        setReviews(reviews.map((review) =>
-          review._id === reviewId ? { ...review, comment: editedComment } : review
-        ));
+        setReviews(
+          reviews.map((review) =>
+            review._id === reviewId ? { ...review, comment: editedComment } : review
+          )
+        );
         setEditingReview(null);
       }
     } catch (error) {
@@ -89,15 +100,16 @@ const ReviewList = ({ serviceId, newReview, user }) => {
   return (
     <div className="mt-4">
       <h4>Customer Reviews</h4>
-      
-      {/* Display Summary of Ratings */}
+
       {reviews.length > 0 && (
         <div className="mb-3">
           <h5>Overall Rating</h5>
-          <ReactStars 
+          <ReactStars
             count={5}
-            value={reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length} 
-            edit={false} 
+            value={
+              reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+            }
+            edit={false}
             size={24}
             color1="#ccc"
             color2="#ffd700"
@@ -106,110 +118,150 @@ const ReviewList = ({ serviceId, newReview, user }) => {
         </div>
       )}
 
-      {/* Sort Reviews Dropdown */}
-      <Form.Select onChange={(e) => setSortOption(e.target.value)} className="mb-3">
+      <Form.Select
+        onChange={(e) => setSortOption(e.target.value)}
+        className="mb-3"
+      >
         <option value="latest">Most Recent</option>
         <option value="highest">Highest Rated</option>
         <option value="lowest">Lowest Rated</option>
       </Form.Select>
 
       {error && <p className="text-danger">{error}</p>}
-      {reviews.length === 0 ? (
-        <p>No reviews yet.</p>
-      ) : (
-        <>
-          <ListGroup>
-            {paginatedReviews.map((review) => {
-              const isReviewOwner = user?._id === review.userId?._id;
-              return (
-                <ListGroup.Item key={review._id} className="mb-3">
-                  <Card>
-                    <Card.Body>
-                      <Card.Title>
-                        <strong>{review.userId?.name || "Anonymous"}</strong>
-                      </Card.Title>
-                      <Card.Text>
-                        <ReactStars
-                          count={5}
-                          value={review.rating}
-                          edit={false}
-                          size={24}
-                          color1="#ccc"
-                          color2="#ffd700"
-                        />
-                      </Card.Text>
-                      {editingReview === review._id ? (
-                        <>
-                          <Form.Control
-                            as="textarea"
-                            value={editedComment}
-                            onChange={(e) => setEditedComment(e.target.value)}
-                          />
-                          <Button 
-                            variant="success" 
-                            className="mt-2 me-2"
-                            onClick={() => handleEditSubmit(review._id)}
-                          >
-                            Save
-                          </Button>
-                          <Button 
-                            variant="secondary" 
-                            className="mt-2"
-                            onClick={() => setEditingReview(null)}
-                          >
-                            Cancel
-                          </Button>
-                        </>
-                      ) : (
-                        <Card.Text>{review.comment}</Card.Text>
-                      )}
-                      <Card.Footer className="text-muted">
-                        {new Date(review.createdAt).toLocaleString()}
-                      </Card.Footer>
-                      {isReviewOwner && !editingReview && (
-                        <div className="d-flex justify-content-end mt-2">
-                          <Button 
-                            variant="warning" 
-                            className="me-2"
-                            onClick={() => handleEditClick(review)}
-                          >
-                            Edit
-                          </Button>
-                          <Button 
-                            variant="danger"
-                            onClick={() => handleDeleteReview(review._id)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      )}
-                    </Card.Body>
-                  </Card>
-                </ListGroup.Item>
-              );
-            })}
-          </ListGroup>
 
-          {/* Pagination Controls */}
-          <div className="d-flex justify-content-between mt-3">
-            <Button 
-              variant="secondary" 
-              disabled={currentPage === 1} 
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              Previous
-            </Button>
-            <span>Page {currentPage} of {totalPages}</span>
-            <Button 
-              variant="primary" 
-              disabled={currentPage === totalPages} 
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-            </Button>
-          </div>
-        </>
-      )}
+      <ListGroup>
+        {paginatedReviews.map((review) => {
+          const isReviewOwner = user?._id === review.userId?._id;
+          return (
+            <ListGroup.Item key={review._id} className="mb-3">
+              <Card>
+                <Card.Body>
+                  <div className="d-flex justify-content-between align-items-start">
+                    <Card.Title className="mb-0">
+                      <strong>{review.userId?.name || "Anonymous"}</strong>
+                    </Card.Title>
+
+                    {isReviewOwner && !editingReview && (
+                      <div className="dropdown">
+                        <button
+                          className="btn btn-light"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          style={{
+                            border: "none",
+                            background: "transparent",
+                            fontSize: "20px",
+                            padding: 0,
+                          }}
+                        >
+                          ⋮
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-end">
+                          <li>
+                            <button
+                              className="dropdown-item"
+                              onClick={() => handleEditClick(review)}
+                            >
+                              Edit
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              className="dropdown-item text-danger"
+                              onClick={() => confirmDelete(review._id)}
+                            >
+                              Delete
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
+                  <Card.Text>
+                    <ReactStars
+                      count={5}
+                      value={review.rating}
+                      edit={false}
+                      size={24}
+                      color1="#ccc"
+                      color2="#ffd700"
+                    />
+                  </Card.Text>
+
+                  {editingReview === review._id ? (
+                    <>
+                      <Form.Control
+                        as="textarea"
+                        value={editedComment}
+                        onChange={(e) => setEditedComment(e.target.value)}
+                      />
+                      <Button
+                        variant="success"
+                        className="mt-2 me-2"
+                        onClick={() => handleEditSubmit(review._id)}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        className="mt-2"
+                        onClick={() => setEditingReview(null)}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <Card.Text>{review.comment}</Card.Text>
+                  )}
+
+                  <Card.Footer className="text-muted">
+                    {new Date(review.createdAt).toLocaleString()}
+                  </Card.Footer>
+                </Card.Body>
+              </Card>
+            </ListGroup.Item>
+          );
+        })}
+      </ListGroup>
+
+      {/* Pagination Controls */}
+      <div className="d-flex justify-content-between mt-3">
+        <Button
+          variant="secondary"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage(currentPage - 1)}
+        >
+          Previous
+        </Button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button
+          variant="primary"
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage(currentPage + 1)}
+        >
+          Next
+        </Button>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this review?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirmed}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

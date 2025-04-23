@@ -83,7 +83,7 @@ async function seedServices() {
     },
     // Add 7 more fake services similarly
   ];
-
+  
   await Service.insertMany(fakeServices);
   console.log("Fake services have been added to the database.");
 }

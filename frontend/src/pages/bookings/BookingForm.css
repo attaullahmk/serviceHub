@@ -1,0 +1,17 @@
+.booking-form-container {
+    max-width: 900px;
+  }
+  
+  .booking-nav .nav-link {
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+  }
+  
+  .booking-nav .nav-link.active {
+    background-color: #f8f9fa;
+    color: #000;
+    border: 1px solid #dee2e6;
+  }
+  

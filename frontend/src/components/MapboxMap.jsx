@@ -65,7 +65,7 @@ const MapboxMap = ({ services }) => {
             <img src="${service.imageGallery?.[0] || ''}" alt="Service Image" style="width:100px;height:auto;border-radius:5px;"/>
             <ul>
               <li><b>Category:</b> ${service.category}</li>
-              <li><b>Price:</b> ₹${service.price}</li>
+              <li><b>Price:</b> PKR ${service.price}</li>
               <li><b>Provider:</b> ${service.provider?.name}</li>
               <li><b>Availability:</b> ${service.availability}</li>
               <li><b>Location:</b> ${service.address}</li>

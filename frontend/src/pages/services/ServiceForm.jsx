@@ -22,13 +22,13 @@ const ServiceForm = () => {
   const [errors, setErrors] = useState({});
 
   const categories = [
-    "Delivery",
+    // "Delivery",
     "Contractors",
     "Electricians",
     "Plumbers",
     "Movers",
     "Auto Repair",
-    "Parking",
+    // "Parking",
   ];
 
   const handleChange = (e) => {

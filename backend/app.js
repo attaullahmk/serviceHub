@@ -19,7 +19,8 @@ const cors = require('cors');
 app.use(cors({
   origin: 'http://localhost:5173', // Allow requests from your frontend origin
   credentials: true, // If you need to send cookies or authorization headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary HTTP methods
+  // methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary HTTP methods
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // allow PATCH
   // allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
 }));
 
@@ -134,3 +135,4 @@ app.all("*", (req, res, next) => {
  
 // Export the app
 module.exports = app;
+ 

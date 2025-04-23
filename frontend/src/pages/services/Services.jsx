@@ -123,8 +123,9 @@ const ServicesPage = () => {
                         {service.description?.slice(0, 50)}...
                       </Card.Text>
                       <Card.Text className="fw-bold text-primary">
-                        Price: ${service.price}
-                      </Card.Text>
+                        {/* Price: PKR{service.price} */}
+                        <strong>Price:</strong> PKR {Number(service.price).toLocaleString()} / hour
+                        </Card.Text>
                     </Card.Body>
                   </Card>
                 </Col>

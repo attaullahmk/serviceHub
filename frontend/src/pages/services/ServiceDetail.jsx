@@ -78,7 +78,9 @@ console.log(user);
 
             <h2 className="service-title">{service.service.title}</h2>
             <p className="service-description">{service.service.description}</p>
-            <h4 className="service-price">Price: ${service.service.price}</h4>
+            <p className="service-price"><strong> Price:</strong> PKR {Number(service.service.price).toLocaleString()}
+            </p>
+            
             <p><strong>Category:</strong> {service.service.category}</p>
             <p><strong>Address:</strong> {service.service.address}</p>
             <p>
@@ -107,8 +109,6 @@ console.log(user);
               </div>
             )}
 
-            {/* Booking Form (Added Below Service Details) */}
-            {!isOwner && <BookingForm serviceId={service.service._id} userId={user?._id} service={service} />}
 
             {/* Review Section */}
             <ReviewList serviceId={service.service._id} user={user} />
@@ -120,7 +120,11 @@ console.log(user);
         <Col lg={5} md={12}>
           <div className="map-container">
             <MapboxMap services={[service.service]} />
+            
+            {/* Booking Form (Added Below Service Details) */}
+            {!isOwner && <BookingForm serviceId={service.service._id} userId={user?._id} service={service} />}
           </div>
+          
         </Col>
 
         {/* Add a wrapper div around Message */}

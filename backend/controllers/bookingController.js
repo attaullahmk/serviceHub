@@ -127,6 +127,25 @@ const getProviderBookings = async (req, res) => {
   });
 };
 
+// ✅ Soft delete: Update isDeleted to true by ID
+const updateBookingIsDeleted = async (req, res) => {
+  const { id } = req.params;
+
+  const booking = await Booking.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true }
+  ).populate("user service provider");
+
+  if (!booking) throw new ExpressError(404, "Booking not found");
+
+  res.status(200).json({
+    success: true,
+    message: "Booking marked as deleted (isDeleted: true)",
+    data: booking,
+  });
+};
+
 
 
 
@@ -136,6 +155,7 @@ module.exports = {
   getBookingById,
   updateBookingStatus,
   deleteBookingById,
-  getUserBookings, // Add this line
-  getProviderBookings, // ✅ Add this line
+  getUserBookings,
+  getProviderBookings,
+  updateBookingIsDeleted, // ✅ Soft delete option
 };

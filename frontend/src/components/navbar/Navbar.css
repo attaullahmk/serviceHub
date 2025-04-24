@@ -130,3 +130,23 @@
   /* display: block; */
   width: 100%;
 }
+
+.notification-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(-108%, -42%) !important;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 4px 6px;
+}
+.translate-middle {
+  transform: translate(-108%, -42%) !important;
+}

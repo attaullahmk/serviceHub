@@ -79,10 +79,56 @@ const deleteNotificationById = async (req, res) => {
   });
 };
 
+
+// ✅ Get notifications for a specific user (recipient)
+const getNotificationsForUser = async (req, res) => {
+  const userId = req.user?._id || req.params.userId; // use auth user or param
+
+  const notifications = await Notification.find({ recipient: userId })
+    .sort({ createdAt: -1 }) // optional: newest first
+    .populate("recipient", "name email");
+
+  res.status(200).json({
+    success: true,
+    count: notifications.length,
+    notifications,
+  });
+};
+
+
+// ✅ Mark all notifications as read for a specific user
+const markAllAsRead = async (req, res) => {
+  const { userId } = req.params;
+
+  const result = await Notification.updateMany(
+    { recipient: userId, isRead: false },
+    { $set: { isRead: true } }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: `${result.modifiedCount} notifications marked as read`,
+  });
+};
+
+
+
 module.exports = {
   createNotification,
   getAllNotifications,
   getNotificationById,
   updateNotificationById,
   deleteNotificationById,
+  getNotificationsForUser,
+  markAllAsRead, // ✅ add this line
 };
+
+
+
+// module.exports = {
+//   createNotification,
+//   getAllNotifications,
+//   getNotificationById,
+//   updateNotificationById,
+//   deleteNotificationById,
+// };

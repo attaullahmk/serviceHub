@@ -89,6 +89,7 @@ const MyBookings = () => {
       ) : (
         <Row className="g-4 px-2 px-sm-4">
           {bookings.map((booking) => (
+          
             <Col key={booking._id} xs={12} sm={6} md={6} lg={4} xl={3}>
               <div className="border rounded shadow-sm overflow-hidden position-relative p-3 bg-white h-100">
                 <div
@@ -102,7 +103,7 @@ const MyBookings = () => {
                 >
                   {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                 </div>
-
+                {console.log("booking delelte ",booking.isDeleted)}
                 <div className="bg-light text-center mb-3" style={{ height: "160px" }}>
                   <img
                     src={booking.service.imageGallery[0]}

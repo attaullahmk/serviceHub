@@ -6,8 +6,10 @@ const {
   updateBookingStatus,
   deleteBookingById,
   getUserBookings,
-  getProviderBookings, // ✅ Added
+  getProviderBookings, // ✅ Already added
+  updateBookingIsDeleted, // ✅ Soft delete controller added
 } = require("../controllers/bookingController");
+
 const { bookingSchema, partialBookingSchema } = require("../schemas/bookingSchema");
 const validateSchema = require("../middlewares/validateSchema");
 const wrapAsync = require("../utils/wrapAsync");
@@ -18,9 +20,10 @@ const router = express.Router();
 router.post("/", validateSchema(bookingSchema), wrapAsync(createBooking));
 router.get("/", wrapAsync(getAllBookings));
 router.get("/user/:userId", wrapAsync(getUserBookings));
-router.get("/provider/:providerId", wrapAsync(getProviderBookings)); // ✅ Added here
+router.get("/provider/:providerId", wrapAsync(getProviderBookings)); // ✅ Already present
 router.get("/:id", wrapAsync(getBookingById));
 router.patch("/:id/status", validateSchema(partialBookingSchema), wrapAsync(updateBookingStatus));
+router.patch("/:id/soft-delete", wrapAsync(updateBookingIsDeleted)); // ✅ New soft-delete route
 router.delete("/:id", wrapAsync(deleteBookingById));
 
 module.exports = router;

@@ -7,7 +7,8 @@ import MapboxMap from "../../components/MapboxMap";
 import ReviewForm from "./ReviewForm";
 import ReviewList from "./ReviewList";
 import { useSelector } from "react-redux";
-import Message from "../../pages/messages/Messages";
+// import Message from "../../pages/messages/Messages";
+import Message from "../../pages/messages/MessageBox";
 import BookingForm from "../bookings/BookingForm"; // Import Booking Form
 
 const ServiceDetail = () => {

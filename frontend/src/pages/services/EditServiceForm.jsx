@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Form, Button, Container, Spinner, Image } from "react-bootstrap";
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const EditService = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const EditService = () => {
   const [selectedImages, setSelectedImages] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/services/${id}`)
+    axios.get(`${BASE_URL}/api/services/${id}`)
       .then(response => {
         setService(response.data.service);
         setLoading(false);
@@ -55,7 +55,7 @@ const EditService = () => {
     });
 
     try {
-      await axios.put(`http://localhost:3000/api/services/${id}`, formData, {
+      await axios.put(`${BASE_URL}/api/services/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       alert("Service updated successfully!");

@@ -1,4 +1,4 @@
-// this not use i dvided the code into two parts to make it easier to read and understand. The first part contains the server setup, including the socket.io connection and notification handling. The second part contains the client-side code for the message box component, which handles user interactions and displays messages.
+// // this not use i dvided the code into two parts to make it easier to read and understand. The first part contains the server setup, including the socket.io connection and notification handling. The second part contains the client-side code for the message box component, which handles user interactions and displays messages.
 
 
 // import { useState, useRef, useEffect } from "react";

@@ -32,7 +32,7 @@
 //     setError(null);
 
 //     try {
-//       const response = await axios.post("http://localhost:3000/api/bookings", {
+//       const response = await axios.post("${BASE_URL}/api/bookings", {
 //         user: user._id,
 //         service: service.service._id,
 //         provider: service.service.provider._id,
@@ -116,7 +116,7 @@
 // export default BookingForm;
 
 
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -148,7 +148,7 @@ const BookingForm = ({ service }) => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/bookings", {
+      const response = await axios.post(`${BASE_URL}/api/bookings`, {
         user: user._id,
         service: service.service._id,
         provider: service.service.provider._id,

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapboxMap.css';
+const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+
 
 const MapboxMap = ({ services }) => {
   const mapContainerRef = useRef(null);
@@ -15,7 +17,7 @@ const MapboxMap = ({ services }) => {
     console.log("map", services);
 
     const maptoken = 'pk.eyJ1IjoiYXR0YXVsbGFoMTMxNDAyNSIsImEiOiJjbTZidWdvbGswYmJxMmtzZGw2OGN3MDQ0In0.tGQ5FDy_IctoxWbEMIC6Vw';
-    mapboxgl.accessToken = maptoken;
+    mapboxgl.accessToken = mapboxToken;
 
     const fetchGeolocation = async () => {
       try {

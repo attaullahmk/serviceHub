@@ -8,6 +8,7 @@ import {
   FaDollarSign,
   FaInfoCircle,
 } from "react-icons/fa";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ProviderBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -25,7 +26,7 @@ const [bookingToDelete, setBookingToDelete] = useState(null);
     const fetchProviderBookings = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/bookings/provider/${user._id}`
+          `${BASE_URL}/api/bookings/provider/${user._id}`
         );
         setBookings(response.data.data);
         console.log("Provider Bookings:", response.data.data);
@@ -148,7 +149,7 @@ const [bookingToDelete, setBookingToDelete] = useState(null);
                         onClick={async () => {
                           try {
                             await axios.patch(
-                              `http://localhost:3000/api/bookings/${booking._id}/status`,
+                              `${BASE_URL}/api/bookings/${booking._id}/status`,
                               { status: "confirmed" }
                             );
                             setBookings((prev) =>
@@ -171,7 +172,7 @@ const [bookingToDelete, setBookingToDelete] = useState(null);
                         onClick={async () => {
                           try {
                             await axios.patch(
-                              `http://localhost:3000/api/bookings/${booking._id}/status`,
+                              `${BASE_URL}/api/bookings/${booking._id}/status`,
                               { status: "canceled" }
                             );
                             setBookings((prev) =>
@@ -277,7 +278,7 @@ const [bookingToDelete, setBookingToDelete] = useState(null);
       onClick={async () => {
         try {
           await axios.patch(
-            `http://localhost:3000/api/bookings/${bookingToDelete._id}/soft-delete`,
+            `${BASE_URL}/api/bookings/${bookingToDelete._id}/soft-delete`,
             { isDeleted: true }
           );
           setBookings((prev) =>

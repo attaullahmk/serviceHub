@@ -4,13 +4,13 @@ import axios from "axios";
 import { Container, Row, Col, Carousel, Button, Spinner, Card, Badge } from "react-bootstrap";
 import "./ServiceDetail.css";
 import MapboxMap from "../../components/MapboxMap";
-import ReviewForm from "./ReviewForm";
-import ReviewList from "./ReviewList";
+import ReviewForm from "./reviews/ReviewForm";
+import ReviewList from "./reviews/ReviewList";
 import { useSelector } from "react-redux";
 // import Message from "../../pages/messages/Messages";
 import Message from "../../pages/messages/MessageBox";
 import BookingForm from "../bookings/BookingForm"; // Import Booking Form
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const ServiceDetail = () => {
   const { id } = useParams();
   const [service, setService] = useState(null);
@@ -19,7 +19,7 @@ const ServiceDetail = () => {
   const { user } = useSelector((state) => state.auth); // Get user from Redux
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/services/${id}`)
+    axios.get(`${BASE_URL}/api/services/${id}`)
       .then(response => {
         setService(response.data);
       })
@@ -35,7 +35,7 @@ const ServiceDetail = () => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this service?")) {
       try {
-        await axios.delete(`http://localhost:3000/api/services/${id}`);
+        await axios.delete(`${BASE_URL}/api/services/${id}`);
         alert("Service deleted successfully!");
         navigate("/"); // Redirect to homepage or service list
       } catch (error) {

@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+// import { FaRegCalendarCheck } from "react-icons/fa"; // 📅 Importing a booking-style icon
+import { MdOutlineCalendarMonth } from "react-icons/md";
 import io from "socket.io-client";
 import axios from "axios";
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 import SearchBar from "./SearchBar";
 import CategoryPopover from "./CategoryPopover";
@@ -11,7 +15,7 @@ import UserMenu from "./UserMenu";
 import { logoutUser } from "../../redux/AuthSlice";
 import "./Navbar.css";
 
-const socket = io("http://localhost:3000");
+const socket = io(`http://localhost:3000`); // Ensure this matches your backend URL);
 
 const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,11 +35,19 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
-  const categories = ["Contractors", "Electricians", "Plumbers", "Movers", "Auto Repair"];
+  const categories = [
+    "Contractors",
+    "Electricians",
+    "Plumbers",
+    "Movers",
+    "Auto Repair",
+  ];
 
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/notifications/user/${user?._id}`);
+      const res = await axios.get(
+        `${BASE_URL}/api/notifications/user/${user?._id}`
+      );
       const data = res.data;
       if (data.success && Array.isArray(data.notifications)) {
         setNotifications(data.notifications);
@@ -48,7 +60,9 @@ const Navbar = () => {
 
   const markAllAsRead = async () => {
     try {
-      const res = await axios.put(`http://localhost:3000/api/notifications/markAllAsRead/${user._id}`);
+      const res = await axios.put(
+        `${BASE_URL}/api/notifications/markAllAsRead/${user._id}`
+      );
       if (res.data.success) {
         const updated = notifications.map((n) => ({ ...n, isRead: true }));
         setNotifications(updated);
@@ -96,9 +110,21 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (authPopoverRef.current && !authPopoverRef.current.contains(event.target)) setShowAuthPopover(false);
-      if (categoryPopoverRef.current && !categoryPopoverRef.current.contains(event.target)) setShowCategoryPopover(false);
-      if (notifDropdownRef.current && !notifDropdownRef.current.contains(event.target)) setShowNotifDropdown(false);
+      if (
+        authPopoverRef.current &&
+        !authPopoverRef.current.contains(event.target)
+      )
+        setShowAuthPopover(false);
+      if (
+        categoryPopoverRef.current &&
+        !categoryPopoverRef.current.contains(event.target)
+      )
+        setShowCategoryPopover(false);
+      if (
+        notifDropdownRef.current &&
+        !notifDropdownRef.current.contains(event.target)
+      )
+        setShowNotifDropdown(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -111,7 +137,12 @@ const Navbar = () => {
         <Link className="navbar-brand" to="/">
           <img src="/image/loogo.jpg" alt="ServiceHub" />
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
 
@@ -132,7 +163,15 @@ const Navbar = () => {
               categoryPopoverRef={categoryPopoverRef}
             />
           </ul>
-          
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+  <li className="nav-item">
+  
+    <Link to="/services" className="btn btn-primary btn-rounded booking-btn d-flex align-items-center gap-2">
+          <MdOutlineCalendarMonth size={22} />
+          {/* Booking Page */}
+        </Link>
+  </li>
+</ul>
 
           <div className="d-flex gap-3 position-relative">
             {user ? (
@@ -155,8 +194,12 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/login" className="btn btn-primary">Log In</Link>
-                <Link to="/signup" className="btn btn-primary">Sign Up</Link>
+                <Link to="/login" className="btn btn-primary">
+                  Log In
+                </Link>
+                <Link to="/signup" className="btn btn-primary">
+                  Sign Up
+                </Link>
               </>
             )}
           </div>

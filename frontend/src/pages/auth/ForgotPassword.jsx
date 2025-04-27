@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ForgotPassword.css";
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -16,7 +16,7 @@ const ForgotPassword = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/forgot-password", { email });
+      const response = await axios.post(`${BASE_URL}/api/auth/forgot-password`, { email });
       setMessage(response.data.message);
       navigate("/reset-password"); // Redirect to Reset Password Page
     } catch (err) {

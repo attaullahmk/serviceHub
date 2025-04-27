@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../redux/authSlice";
+import { loginSuccess } from "../../redux/AuthSlice";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Signup.css";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -30,7 +31,7 @@ const Signup = () => {
         window.history.replaceState({}, "", "/signup");
 
         try {
-          const response = await axios.get("http://localhost:3000/api/auth/me", {
+          const response = await axios.get(`${BASE_URL}/api/auth/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
 
@@ -54,7 +55,7 @@ const Signup = () => {
     e.preventDefault();
     setError("");
     try {
-      await axios.post("http://localhost:3000/api/auth/send-otp", { email: formData.email });
+      await axios.post(`${BASE_URL}/api/auth/send-otp`, { email: formData.email });
       setOtpSent(true);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to send OTP");
@@ -66,7 +67,7 @@ const Signup = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/verify-otp", formData);
+      const response = await axios.post(`${BASE_URL}/api/auth/verify-otp`, formData);
       const { token, user } = response.data;
       localStorage.setItem("authToken", token);
       dispatch(loginSuccess({ user, token }));
@@ -77,7 +78,7 @@ const Signup = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/api/auth/google";
+    window.location.href = `${BASE_URL}/api/auth/google`;
   };
 
   return (

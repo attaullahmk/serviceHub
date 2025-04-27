@@ -147,6 +147,133 @@ const updateBookingIsDeleted = async (req, res) => {
 };
 
 
+// const Service = require("../models/service");
+// const Notification = require("../models/notification");
+
+// // ✅ Create Booking Request
+// const createBookingRequest = async (req, res) => {
+//   try {
+//     const { category, area, offeredPrice, description, id } = req.body; 
+//     // 🧠 now receiving `id` (user id) from frontend (you sent it inside formData)
+
+//     const userId = id || req.user._id; 
+//     // 🧠 Prefer body id (from frontend) if sent, otherwise fallback to JWT user
+
+//     if (!category || !area || !offeredPrice || !userId) {
+//       return res.status(400).json({ error: "Category, Area, Offered Price, and User ID are required." });
+//     }
+
+//     // 1. Find all services matching the category and area
+//     const matchingServices = await Service.find({
+//       category: category,
+//       address: { $regex: new RegExp(area, "i") }, 
+//       availability: true,
+//       isDeleted: false,
+//     }).populate("provider");
+
+//     if (matchingServices.length === 0) {
+//       return res.status(404).json({ message: "No services found in this area and category." });
+//     }
+    
+//     // 2. Send notification to each provider
+//     console.log("Matching Services: ", matchingServices); // Debugging line
+//     const notifications = matchingServices.map(service => ({
+//       recipient: service.provider._id,
+//       sender: userId, // 🧠 Now tracking who sent the booking request
+//       type: "booking",
+//       message: `New booking request! Offered price: PKR ${offeredPrice}. Description: ${description || "No details"}`,
+//     }));
+
+//     await Notification.insertMany(notifications);
+
+//     // 3. Send response back to the customer
+//     res.status(201).json({
+//       message: "Booking request sent to available service providers!",
+//       servicesNotified: matchingServices.length,
+//     });
+
+//   } catch (error) {
+//     console.error("Error creating booking:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
+
+
+const Notification = require("../models/notification");
+// const Booking = require("../models/booking");
+// const Service = require("../models/service");
+// const ExpressError = require("../utils/ExpressError");
+// const { bookingSchema } = require("../schemas/bookingSchema");
+
+const createBookingRequest = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { category, area, offeredPrice, description, id } = req.body;
+
+    const userId = id || req.user._id;
+
+    if (!category || !area || !offeredPrice || !userId) {
+      return res.status(400).json({ error: "Category, Area, Offered Price, and User ID are required." });
+    }
+
+    // 1. Find all services matching the category and area
+    const matchingServices = await Service.find({
+      category: category,
+      address: { $regex: new RegExp(area, "i") }, 
+      availability: true,
+      isDeleted: false,
+    }).populate("provider");
+
+    if (matchingServices.length === 0) {
+      return res.status(404).json({ message: "No services found in this area and category." });
+    }
+
+    // 2. Create a booking for each matching service
+    const createdBookings = [];
+
+    for (const service of matchingServices) {
+      const bookingData = {
+        user: userId,
+        service: service._id,
+        provider: service.provider._id,
+        bookingDate: new Date(), // 🧠 Setting booking date to now, or you can customize
+        totalPrice: offeredPrice, // 🧠 Using offered price
+      };
+
+      // const { error } = bookingSchema.validate(bookingData);
+      // if (error) throw new ExpressError(400, error.details[0].message);
+
+      const booking = new Booking(bookingData);
+      await booking.save();
+      createdBookings.push(booking);
+    }
+
+    // 3. Send notification to each provider
+    const notifications = matchingServices.map(service => ({
+      recipient: service.provider._id,
+      sender: userId,
+      type: "booking",
+      message: `New booking request! Offered price: PKR ${offeredPrice}. Description: ${description || "No details"}`,
+    }));
+
+    await Notification.insertMany(notifications);
+
+    // 4. Send response back to the customer
+    res.status(201).json({
+      message: "Booking request sent and bookings created successfully!",
+      servicesNotified: matchingServices.length,
+      bookingsCreated: createdBookings.length,
+    });
+
+  } catch (error) {
+    console.error("Error creating booking request:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
 
 
 module.exports = {
@@ -158,4 +285,5 @@ module.exports = {
   getUserBookings,
   getProviderBookings,
   updateBookingIsDeleted, // ✅ Soft delete option
+  createBookingRequest
 };

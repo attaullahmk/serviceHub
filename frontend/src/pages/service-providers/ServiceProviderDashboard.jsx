@@ -18,6 +18,7 @@ import ProviderBookings from "./ProviderBookings";
 import { Link } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
 import { forwardRef } from "react";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const CustomToggle = forwardRef(({ onClick }, ref) => (
   <span
@@ -53,7 +54,7 @@ const ServiceProviderDashboard = () => {
     const fetchProviderDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/serviceProviders/dashboard/${user._id}`
+          `${BASE_URL}/api/serviceProviders/dashboard/${user._id}`
         );
         setPrivileges(response.data);
       } catch (error) {
@@ -64,7 +65,7 @@ const ServiceProviderDashboard = () => {
     const fetchServices = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/services/provider/${user._id}`
+          `${BASE_URL}/api/services/provider/${user._id}`
         );
         setServices(response.data.services);
       } catch (error) {
@@ -79,7 +80,7 @@ const ServiceProviderDashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/services/${id}`);
+      await axios.delete(`${BASE_URL}/api/services/${id}`);
       alert("Service deleted successfully!");
       navigate("/");
     } catch (error) {

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "../../redux/authSlice"; // Import Redux action
+import { setUser } from "../../redux/AuthSlice"; // Import Redux action
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./serviceProviderForm.css"; // Custom CSS for the form
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const ServiceProviderForm = () => {
   // Get the current logged-in user from Redux store
   const dispatch = useDispatch();
@@ -55,12 +55,12 @@ const ServiceProviderForm = () => {
 
       // Send a POST request to create the service provider
       const response = await axios.post(
-        "http://localhost:3000/api/serviceProviders",
+        `${BASE_URL}/api/serviceProviders`,
         dataToSend
       );
 
       // Update the user's role in the database
-      await axios.put(`http://localhost:3000/api/users/${user._id}`, {
+      await axios.put(`${BASE_URL}/api/users/${user._id}`, {
         role: "provider",
       });
 

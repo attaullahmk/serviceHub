@@ -20,8 +20,8 @@ import ServiceDetail from "../pages/services/ServiceDetail";
 import EditServiceForm from "../pages/services/EditServiceForm";
 import Categories from "../pages/categories/Categories";
 import CategoryDetail from "../pages/categories/CategoryDetail";
-import Bookings from "../pages/bookings/Bookings";
-import Messages from "../pages/messages/Messages";
+import Bookings from "../pages/bookings/MyBookings";
+import Messages from "../pages/messages/MessageBox";
 import Profile from "../pages/profile/Profile";
 import NotFound from "../pages/auth/NotFound";
 import Provider from '../pages/service-providers/serviceProviderForm'

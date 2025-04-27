@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Card, ListGroup, Badge } from "react-bootstrap";
 import socket from "../../socket";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ConversationList = ({ senderId, receiverId, serviceId, setSelectedConversation }) => {
   const [conversations, setConversations] = useState([]);
@@ -10,7 +11,7 @@ const ConversationList = ({ senderId, receiverId, serviceId, setSelectedConversa
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/conversations/sender/${senderId}/service/${serviceId}`);
+        const res = await axios.get(`${BASE_URL}/api/conversations/sender/${senderId}/service/${serviceId}`);
         if (res.data.success) setConversations(res.data.data);
       } catch (err) {
         console.error("Error fetching conversations:", err);
@@ -32,7 +33,7 @@ const ConversationList = ({ senderId, receiverId, serviceId, setSelectedConversa
 
   const createConversation = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/api/conversations", {
+      const res = await axios.post(`${BASE_URL}/api/conversations`, {
         participants: [senderId, receiverId],
         service: serviceId,
       });

@@ -150,3 +150,42 @@
 .translate-middle {
   transform: translate(-108%, -42%) !important;
 }
+
+
+
+
+
+/* Initial button style */
+.booking-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out; /* Smooth transition for hover effects */
+}
+
+/* Normal state */
+.booking-btn {
+  background-color: #007bff; /* Bootstrap Primary color */
+  color: #fff;
+}
+
+/* Hover animation */
+.booking-btn:hover {
+  background-color: #0056b3; /* Darken color on hover */
+  transform: scale(1.1); /* Slightly enlarge the button */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Add soft shadow */
+}
+
+/* Smooth icon transition */
+.booking-btn svg {
+  transition: transform 0.3s ease;
+}
+
+/* Icon grows slightly when hovering */
+.booking-btn:hover svg {
+  transform: rotate(15deg); /* Optional: icon rotation */
+}

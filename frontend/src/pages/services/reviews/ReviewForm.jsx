@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import ReactStars from "react-stars"; // Import ReactStars
 import "./ReviewForm.css";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ReviewForm = ({ serviceId }) => {
   const [rating, setRating] = useState(5);
@@ -25,7 +26,7 @@ const ReviewForm = ({ serviceId }) => {
     try {
       console.log({ serviceId, rating, comment, userId });
 
-      const response = await axios.post("http://localhost:3000/api/reviews", {
+      const response = await axios.post(`${BASE_URL}/api/reviews`, {
         serviceId,
         rating,
         comment,

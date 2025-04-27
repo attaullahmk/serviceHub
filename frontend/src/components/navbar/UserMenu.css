@@ -1,0 +1,30 @@
+.popover-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    text-decoration: none; /* ✅ Remove underline */
+    color: #000; /* or your theme color */
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+  }
+  
+  .popover-item:hover {
+    background-color: #f1f1f1; /* Light hover background */
+    text-decoration: none; /* ✅ Still no underline on hover */
+  }
+  
+  .logout-btn {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 500;
+    color: #d9534f; /* Logout in red (you can change) */
+  }
+  
+  .logout-btn:hover {
+    background-color: #f1f1f1;
+    text-decoration: none;
+  }
+  

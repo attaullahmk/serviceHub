@@ -3,6 +3,7 @@ import axios from "axios";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { PURGE } from "redux-persist";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null, // Load user from localStorage
@@ -74,7 +75,7 @@ export const logoutUser = () => (dispatch) => {
 export const loginUser = (formData, navigate) => async (dispatch) => {
   dispatch(loginStart());
   try {
-    const response = await axios.post("http://localhost:3000/api/auth/login", formData);
+    const response = await axios.post(`${BASE_URL}/api/auth/login`, formData);
     dispatch(loginSuccess(response.data));
     navigate("/");
   } catch (err) {

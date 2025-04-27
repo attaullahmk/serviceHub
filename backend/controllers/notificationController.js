@@ -99,7 +99,7 @@ const getNotificationsForUser = async (req, res) => {
 // ✅ Mark all notifications as read for a specific user
 const markAllAsRead = async (req, res) => {
   const { userId } = req.params;
-
+console.log("userid ", userId);
   const result = await Notification.updateMany(
     { recipient: userId, isRead: false },
     { $set: { isRead: true } }

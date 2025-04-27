@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../redux/authSlice"; // Import Redux action
+import { loginUser } from "../../redux/AuthSlice"; // Import Redux action
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css"; // Custom CSS file
 

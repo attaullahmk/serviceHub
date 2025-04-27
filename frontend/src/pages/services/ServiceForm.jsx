@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./serviceForm.css";
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const ServiceForm = () => {
   const providerId = useSelector((state) => state.auth.user?._id) || "";
 
@@ -73,7 +73,7 @@ const ServiceForm = () => {
     });
 
     try {
-      await axios.post("http://localhost:3000/api/services", formDataToSend, {
+      await axios.post(`${BASE_URL}/api/services`, formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setMessage("Service created successfully!");

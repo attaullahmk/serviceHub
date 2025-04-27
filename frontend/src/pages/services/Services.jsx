@@ -5,7 +5,8 @@ import { Container, Row, Col, Card, Carousel } from "react-bootstrap";
 import ServiceFilters from "./ServiceFilters"; // Import new filter component
 import MapboxMap from "../../components/MapboxMap";
 import "./services.css";
-
+import BookingForm from "./BookingForm";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ServicesPage = () => {
   const location = useLocation();
@@ -27,7 +28,7 @@ const ServicesPage = () => {
       const address = searchParams.get("address") || "";
 
       try {
-        const response = await axios.get("http://localhost:3000/api/services/search", {
+        const response = await axios.get(`${BASE_URL}/api/services/search`, {
           params: { category, title, address, sortByPrice, sortByRating, availability, priceRange },
         });
         setServices(response.data.services);
@@ -145,7 +146,7 @@ const ServicesPage = () => {
           ) : (
             <p className="text-center text-muted">No services available on the map.</p>
           )}
-      
+           <BookingForm service={services} /> {/* Booking Form Component */}
         </Col>
 
 

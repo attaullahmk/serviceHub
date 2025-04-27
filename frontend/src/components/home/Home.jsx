@@ -4,6 +4,9 @@ import axios from "axios";
 import { Carousel, Card, Container, Row, Col, Spinner } from "react-bootstrap";
 import "./Home.css"; // Add CSS for styling
 import Slider from "./Slider";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// const BASE_URL = 'http://localhost:3000';
+console.log("BASE_URL", BASE_URL); // Check the base URL
 
 const ServiceCards = () => {
   const [latestServices, setLatestServices] = useState([]);
@@ -13,8 +16,8 @@ const ServiceCards = () => {
 
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:3000/api/services/latest"),
-      axios.get("http://localhost:3000/api/services/top-rated"),
+      axios.get(`${BASE_URL}/api/services/latest`),
+      axios.get(`${BASE_URL}/api/services/top-rated`),
     ])
       .then(([latestResponse, topRatedResponse]) => {
         if (latestResponse.data && Array.isArray(latestResponse.data.services)) {

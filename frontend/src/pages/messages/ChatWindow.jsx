@@ -4,6 +4,7 @@ import { Button } from "react-bootstrap";
 import MessageInput from "./MessageInput";
 import MessageBubble from "./MessageBubble";
 import socket from "../../socket";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const ChatWindow = ({ conversation, setSelectedConversation, senderId, receiverId, user }) => {
   const [messages, setMessages] = useState([]);
@@ -12,7 +13,7 @@ const ChatWindow = ({ conversation, setSelectedConversation, senderId, receiverI
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/messages/conversation/${conversation._id}`);
+        const res = await axios.get(`${BASE_URL}/api/messages/conversation/${conversation._id}`);
         if (res.data.success) setMessages(res.data.data);
       } catch (err) {
         console.error("Error fetching messages:", err);
@@ -29,7 +30,7 @@ const ChatWindow = ({ conversation, setSelectedConversation, senderId, receiverI
   const handleSendMessage = async (text) => {
     if (!text.trim()) return;
     try {
-      const res = await axios.post("http://localhost:3000/api/messages", {
+      const res = await axios.post(`${BASE_URL}/api/messages`, {
         conversationId: conversation._id,
         sender: senderId,
         receiver: receiverId,

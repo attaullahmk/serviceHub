@@ -1,0 +1,124 @@
+/* NotificationDropdown.css */
+.notification-container {
+    position: relative;
+    display: inline-block;
+    margin-left: 1rem;
+  }
+  
+  .notification-icon {
+    font-size: 1.5rem;
+    color: #3b82f6;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .notification-icon:hover {
+    transform: scale(1.1);
+  }
+  
+  .notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    min-width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+  }
+  
+  .notification-dropdown {
+    position: absolute;
+    top: 2.5rem;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    width: 90vw;
+    max-width: 320px;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+  }
+  
+  .notification-empty {
+    padding: 0.5rem;
+    text-align: center;
+    color: #6b7280;
+  }
+  
+  .notification-item {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+    background: white;
+  }
+  
+  .notification-item.unread {
+    background: #f0f8ff;
+    font-weight: 600;
+  }
+  
+  .notification-message {
+    flex-grow: 1;
+    font-size: 0.875rem;
+    color: #1f2937;
+  }
+  
+  .notification-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ef4444;
+    margin-left: 0.625rem;
+    flex-shrink: 0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 640px) {
+    .notification-dropdown {
+      right: -1rem;
+      width: 100vw;
+      max-width: none;
+      border-radius: 0;
+      box-shadow: none;
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      position: fixed;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      max-height: 50vh;
+      animation: slideUp 0.3s ease;
+    }
+  
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+  
+    .notification-container {
+      margin-left: 0.5rem;
+    }
+  }
+  
+  @media (min-width: 641px) and (max-width: 768px) {
+    .notification-dropdown {
+      right: -0.5rem;
+    }
+  }

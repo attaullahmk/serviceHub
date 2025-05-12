@@ -118,24 +118,64 @@ io.on("connection", (socket) => {
   });
 
   // ✅ Handle real-time notification
-  socket.on("sendNotification", async ({ recipientId, type, message }) => {
+  // socket.on("sendNotification", async ({ recipientId, type, message }) => {
+  //   try {
+  //     // Save to database
+  //     const newNotification = await Notification.create({
+  //       recipient: recipientId,
+  //       type,
+  //       message,
+  //     });
+
+  //     const recipientSocketId = users[recipientId];
+  //     if (recipientSocketId) {
+  //       io.to(recipientSocketId).emit("receiveNotification", newNotification);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending notification:", error);
+  //   }
+  // });
+ socket.on("sendNotification", async ({ recipientId, type, message, targetId, targetType }) => {
     try {
-      // Save to database
+      // Save the notification to the database with default values for isRead
       const newNotification = await Notification.create({
         recipient: recipientId,
         type,
         message,
+        targetId,    // Use targetId as defined in the Joi schema
+        targetType,  // Use targetType as defined in the Joi schema
+        isRead: false,
       });
-
-      const recipientSocketId = users[recipientId];
-      if (recipientSocketId) {
-        io.to(recipientSocketId).emit("receiveNotification", newNotification);
-      }
+      console.log("Notification saved:", newNotification);
     } catch (error) {
-      console.error("Error sending notification:", error);
+      console.error("Error saving notification:", error);
     }
-  });
+});
 
+  
+  // Listen for marking a single notification as read
+  // socket.on("markNotificationAsRead", async ({ userId, notificationId }) => {
+  //   try {
+  //     // Find and update the notification to mark it as read
+  //     const notification = await Notification.findOneAndUpdate(
+  //       { _id: notificationId, recipient: userId },
+  //       { isRead: true },
+  //       { new: true }
+  //     );
+  
+  //     if (!notification) {
+  //       return socket.emit("error", { message: "Notification not found or already read." });
+  //     }
+  
+  //     console.log("Notification marked as read:", notification);
+  
+  //     // Emit the updated notification back to the user
+  //     io.to(users[userId]).emit("notificationRead", notification);
+  //   } catch (error) {
+  //     console.error("Error marking notification as read:", error);
+  //   }
+  // });
+  
   // Handle user disconnect
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
@@ -159,4 +199,5 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
 

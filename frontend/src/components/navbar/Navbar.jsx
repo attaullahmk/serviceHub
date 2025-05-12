@@ -7,12 +7,15 @@ import io from "socket.io-client";
 import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 import SearchBar from "./SearchBar";
 import CategoryPopover from "./CategoryPopover";
 import NotificationDropdown from "./NotificationDropdown";
 import UserMenu from "./UserMenu";
 import { logoutUser } from "../../redux/AuthSlice";
+// import CategoryDropdown from "./CategoryDropdown";
+import CategoryMenu from "./CategoryMenu";
+
+
 import "./Navbar.css";
 
 const socket = io(`http://localhost:3000`); // Ensure this matches your backend URL);
@@ -35,20 +38,16 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
-  const categories = [
-    "Contractors",
-    "Electricians",
-    "Plumbers",
-    "Movers",
-    "Auto Repair",
-  ];
+
 
   const fetchNotifications = async () => {
     try {
+      console.log("Fetching notifications for user:", user?._id);
       const res = await axios.get(
         `${BASE_URL}/api/notifications/user/${user?._id}`
       );
       const data = res.data;
+      console.log("Fetched notifications:", data);
       if (data.success && Array.isArray(data.notifications)) {
         setNotifications(data.notifications);
         setUnreadCount(data.notifications.filter((n) => !n.isRead).length);
@@ -102,11 +101,27 @@ const Navbar = () => {
     if ([...params].length > 0) navigate(`/services?${params.toString()}`);
   };
 
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setShowCategoryPopover(false);
-    handleSearch({ preventDefault: () => {} });
-  };
+  // const handleCategorySelect = (category) => {
+  //   setSelectedCategory(category);
+  //   setShowCategoryPopover(false);
+  //   handleSearch({ preventDefault: () => {} });
+  // };
+
+
+  // Update handleCategorySelect in Navbar component
+const handleCategorySelect = (category) => {
+  setSelectedCategory(category);
+  setShowCategoryPopover(false);
+  
+  // Immediately trigger search with selected category
+  const params = new URLSearchParams();
+  if (category) params.set("category", category);
+  if (searchTerm) params.set("title", searchTerm);
+  if (location) params.set("address", location);
+  navigate(`/services?${params.toString()}`);
+};
+
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -132,29 +147,34 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="container-fluid navbar navbar-expand-lg bg-white border-bottom sticky-top">
-      <div className="container-fluid px-4">
-        <Link className="navbar-brand" to="/">
-          <img src="/image/loogo.jpg" alt="ServiceHub" />
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarContent"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
+    <>
+      <nav
+        style={{ display: "block" }}
+        className="container-fluid navbar navbar-expand-lg bg-white border-bottom sticky-top"
+      >
+        <div className="container-fluid px-4">
+          <Link className="navbar-brand" to="/">
+            <img src="/image/loogo.jpg" alt="ServiceHub" />
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
 
-        <div className="collapse navbar-collapse" id="navbarContent">
-          <SearchBar
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            location={location}
-            setLocation={setLocation}
-            handleSearch={handleSearch}
-          />
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <div className="collapse navbar-collapse" id="navbarContent">
+            <SearchBar
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              location={location}
+              setLocation={setLocation}
+              handleSearch={handleSearch}
+            />
+
+            {/* <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <CategoryPopover
               showCategoryPopover={showCategoryPopover}
               setShowCategoryPopover={setShowCategoryPopover}
@@ -162,50 +182,73 @@ const Navbar = () => {
               handleCategorySelect={handleCategorySelect}
               categoryPopoverRef={categoryPopoverRef}
             />
-          </ul>
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-  <li className="nav-item">
-  
-    <Link to="/services" className="btn btn-primary btn-rounded booking-btn d-flex align-items-center gap-2">
-          <MdOutlineCalendarMonth size={22} />
-          {/* Booking Page */}
-        </Link>
-  </li>
-</ul>
+          </ul> */}
 
-          <div className="d-flex gap-3 position-relative">
-            {user ? (
-              <>
-                <NotificationDropdown
-                  unreadCount={unreadCount}
-                  notifications={notifications}
-                  showNotifDropdown={showNotifDropdown}
-                  setShowNotifDropdown={setShowNotifDropdown}
-                  markAllAsRead={markAllAsRead}
-                  notifDropdownRef={notifDropdownRef}
-                />
-                <UserMenu
-                  user={user}
-                  setShowAuthPopover={setShowAuthPopover}
-                  showAuthPopover={showAuthPopover}
-                  handleLogout={handleLogout}
-                  authPopoverRef={authPopoverRef}
-                />
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="btn btn-primary">
-                  Log In
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <Link
+                  to="/services"
+                  className="btn btn-primary btn-rounded booking-btn d-flex align-items-center gap-2"
+                >
+                  <MdOutlineCalendarMonth size={22} />
+                  {/* Booking Page */}
                 </Link>
-                <Link to="/signup" className="btn btn-primary">
-                  Sign Up
-                </Link>
-              </>
-            )}
+              </li>
+            </ul>
+
+            <div className="d-flex gap-3 position-relative">
+              {user ? (
+                <>
+                  {/* <NotificationDropdown
+                    unreadCount={unreadCount}
+                    notifications={notifications}
+                    showNotifDropdown={showNotifDropdown}
+                    setShowNotifDropdown={setShowNotifDropdown}
+                    markAllAsRead={markAllAsRead}
+                    notifDropdownRef={notifDropdownRef}
+                  /> */}
+                  <NotificationDropdown
+  unreadCount={unreadCount}
+  notifications={notifications}
+  showNotifDropdown={showNotifDropdown}
+  setShowNotifDropdown={setShowNotifDropdown}
+  markAllAsRead={markAllAsRead}
+  notifDropdownRef={notifDropdownRef}
+/>
+
+                  <UserMenu
+                    user={user}
+                    setShowAuthPopover={setShowAuthPopover}
+                    showAuthPopover={showAuthPopover}
+                    handleLogout={handleLogout}
+                    authPopoverRef={authPopoverRef}
+                  />
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="btn btn-primary">
+                    Log In
+                  </Link>
+                  <Link to="/signup" className="btn btn-primary">
+                    Sign Up
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+
+        {/* insdie the navbar */}
+        {/* <ul className="navbar-nav me-auto mb-2 mb-lg-0"> */}
+        <CategoryMenu
+          showCategoryPopover={showCategoryPopover}
+          setShowCategoryPopover={setShowCategoryPopover}
+          handleCategorySelect={handleCategorySelect}
+          categoryPopoverRef={categoryPopoverRef}
+        />
+        {/* </ul> */}
+      </nav>
+    </>
   );
 };
 

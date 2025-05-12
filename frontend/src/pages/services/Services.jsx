@@ -19,29 +19,59 @@ const ServicesPage = () => {
   const [availability, setAvailability] = useState("");
   const [priceRange, setPriceRange] = useState("");
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      setLoading(true);
-      const searchParams = new URLSearchParams(location.search);
-      const category = searchParams.get("category") || "";
-      const title = searchParams.get("title") || "";
-      const address = searchParams.get("address") || "";
+  // useEffect(() => {
+  //   const fetchServices = async () => {
+  //     setLoading(true);
+  //     const searchParams = new URLSearchParams(location.search);
+  //     const category = searchParams.get("category") || "";
+  //     const title = searchParams.get("title") || "";
+  //     const address = searchParams.get("address") || "";
 
-      try {
-        const response = await axios.get(`${BASE_URL}/api/services/search`, {
-          params: { category, title, address, sortByPrice, sortByRating, availability, priceRange },
-        });
-        setServices(response.data.services);
-      } catch (error) {
-        console.error("Error fetching services:", error);
-        setServices([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //     try {
+  //       const response = await axios.get(`${BASE_URL}/api/services/search`, {
+  //         params: { category, title, address, sortByPrice, sortByRating, availability, priceRange },
+  //       });
+  //       setServices(response.data.services);
+  //     } catch (error) {
+  //       console.error("Error fetching services:", error);
+  //       setServices([]);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchServices();
-  }, [location.search, sortByPrice, sortByRating, availability, priceRange]);
+  //   fetchServices();
+  // }, [location.search, sortByPrice, sortByRating, availability, priceRange]);
+
+// Update the useEffect in ServicesPage
+useEffect(() => {
+  const fetchServices = async () => {
+    setLoading(true);
+    const searchParams = new URLSearchParams(location.search);
+    
+    try {
+      const response = await axios.get(`${BASE_URL}/api/services/search`, {
+        params: {
+          category: searchParams.get("category") || "",
+          title: searchParams.get("title") || "",
+          address: searchParams.get("address") || "",
+          sortByPrice,
+          sortByRating,
+          availability,
+          priceRange
+        },
+      });
+      setServices(response.data.services);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      setServices([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchServices();
+}, [location.search, sortByPrice, sortByRating, availability, priceRange]);
 
   return (
     <Container fluid className="services-container">

@@ -124,12 +124,12 @@
 
 
 
-.nav{
+/* .nav{
   border: 2px solid red;
   margin: 0;
   /* display: block; */
-  width: 100%;
-}
+  /* width: 100%; */
+/* } */ */
 
 .notification-count {
   position: absolute;
@@ -189,3 +189,119 @@
 .booking-btn:hover svg {
   transform: rotate(15deg); /* Optional: icon rotation */
 }
+
+
+/* Make sure navbar sticks across all browsers */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 1030; /* higher than default to stay above other content */
+  background-color: #ffffff; /* solid background to avoid transparency */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* soft shadow on scroll */
+}
+
+/* Extra safety: force navbar to be always on top */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background-color: #ffffff;
+}
+
+/* Force parent elements to behave properly for sticky */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* prevent horizontal scroll, allow vertical */
+}
+
+.container-fluid {
+  width: 100%;
+  padding: 0; /* no extra padding */
+  margin: 0;
+}
+
+/* Sticky Navbar Customization */
+.sticky-top {
+  position: sticky !important; /* force sticky even if Bootstrap fails */
+  top: 0;
+  z-index: 1030;
+  background-color: #ffffff; /* solid background */
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.05); /* soft bottom shadow */
+}
+
+/* Navbar.css */
+
+.navbar {
+  background: rgba(255, 255, 255, 0.8) !important; /* semi-transparent */
+  backdrop-filter: blur(10px); /* blur the background */
+  -webkit-backdrop-filter: blur(10px); /* for Safari */
+  transition: background-color 0.3s, backdrop-filter 0.3s;
+  z-index: 1030; /* stay on top */
+}
+
+.navbar {
+  /* ... previous code ... */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+/* for catgory in navbar */
+/* .category-btn {
+  background-color: transparent !important;
+  border: none;
+  border-radius: 0 !important;
+  color: #000;
+  font-weight: 500;
+  padding: 6px 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+.category-btn:hover,
+.category-btn:focus {
+  background-color: #f0f0f0; 
+  color: #007bff; 
+  text-decoration: none;
+} */
+/* Remove default dropdown behavior */
+.hover-dropdown .dropdown-menu {
+  display: none;
+  margin-top: 0.5rem;
+  border-radius: 0;
+}
+
+.hover-dropdown:hover .dropdown-menu {
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  font-weight: 500;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.category-btn:hover {
+  background-color: #f0f0f0;
+  color: #007bff;
+}
+
+.mx-3 {
+  margin-right: 0rem !important;
+  margin-left: -2rem !important;
+}
+
+
+
+
+

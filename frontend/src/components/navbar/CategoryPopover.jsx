@@ -5,11 +5,22 @@ const CategoryPopover = ({ showCategoryPopover, setShowCategoryPopover, categori
       </button>
       {showCategoryPopover && (
         <div className="popover-menu category-popover">
-          {categories.map((category, index) => (
+          {/* {categories.map((category, index) => (
             <button key={index} className="popover-item" onClick={() => handleCategorySelect(category)}>
               {category}
             </button>
-          ))}
+          ))} */}
+          {categories.map((category, index) => (
+  <button
+    key={index}
+    className="dropdown-item d-flex align-items-center gap-2"
+    onClick={() => handleCategorySelect(category.name)}
+  >
+    {category.icon}
+    {category.name}
+  </button>
+))}
+
         </div>
       )}
     </li>

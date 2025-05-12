@@ -20,6 +20,7 @@ const SearchBar = ({ searchTerm, setSearchTerm, location, setLocation, handleSea
       <button className="btn btn-primary search-button" type="submit">
         <Search size={20} />
       </button>
+      
     </div>
   </form>
 );

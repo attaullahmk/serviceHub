@@ -82,13 +82,24 @@
 //   console.log(`Server running on http://localhost:${PORT}`);
 // });
  
+
+
+
+
+
+
+
+
+
+// server.js
+
 const app = require("./app");
 const dotenv = require("dotenv");
 const http = require("http");
 const { Server } = require("socket.io");
 const mongoose = require("mongoose");
-const Notification = require("./models/notification"); // ✅ import your model
-
+const Notification = require("./models/notification");
+const Message = require("./models/message"); // ✅ Add message model
 // Load environment variables
 dotenv.config();
 
@@ -104,94 +115,96 @@ const io = new Server(server, {
   },
 });
 
-const users = {}; // Store connected users
+// Store connected users
+const users = {};
 
 // Handle socket connection
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
 
-  // When a user joins, store their ID and notify others
+  // Store user socket ID on join
   socket.on("join", (userId) => {
     users[userId] = socket.id;
     console.log(`${userId} is online`);
     io.emit("onlineUsers", Object.keys(users));
   });
 
-  // ✅ Handle real-time notification
-  // socket.on("sendNotification", async ({ recipientId, type, message }) => {
-  //   try {
-  //     // Save to database
-  //     const newNotification = await Notification.create({
-  //       recipient: recipientId,
-  //       type,
-  //       message,
-  //     });
-
-  //     const recipientSocketId = users[recipientId];
-  //     if (recipientSocketId) {
-  //       io.to(recipientSocketId).emit("receiveNotification", newNotification);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error sending notification:", error);
-  //   }
-  // });
- socket.on("sendNotification", async ({ recipientId, type, message, targetId, targetType }) => {
+  // Handle real-time notification
+  socket.on("sendNotification", async ({ recipientId, type, message, targetId, targetType }) => {
     try {
-      // Save the notification to the database with default values for isRead
+      // Save the notification to the database
       const newNotification = await Notification.create({
         recipient: recipientId,
         type,
         message,
-        targetId,    // Use targetId as defined in the Joi schema
-        targetType,  // Use targetType as defined in the Joi schema
+        targetId,
+        targetType,
         isRead: false,
       });
+
       console.log("Notification saved:", newNotification);
+
+      // Send the notification to the recipient if online
+      const recipientSocketId = users[recipientId];
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit("newNotification", newNotification);
+        console.log(`Notification sent to user ${recipientId}`);
+      } else {
+        console.log(`User ${recipientId} is offline, notification saved for later.`);
+      }
     } catch (error) {
       console.error("Error saving notification:", error);
     }
-});
+  });
 
-  
-  // Listen for marking a single notification as read
-  // socket.on("markNotificationAsRead", async ({ userId, notificationId }) => {
-  //   try {
-  //     // Find and update the notification to mark it as read
-  //     const notification = await Notification.findOneAndUpdate(
-  //       { _id: notificationId, recipient: userId },
-  //       { isRead: true },
-  //       { new: true }
-  //     );
-  
-  //     if (!notification) {
-  //       return socket.emit("error", { message: "Notification not found or already read." });
-  //     }
-  
-  //     console.log("Notification marked as read:", notification);
-  
-  //     // Emit the updated notification back to the user
-  //     io.to(users[userId]).emit("notificationRead", notification);
-  //   } catch (error) {
-  //     console.error("Error marking notification as read:", error);
-  //   }
-  // });
-  
-  // Handle user disconnect
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
 
-    Object.keys(users).forEach((userId) => {
-      if (users[userId] === socket.id) {
-        delete users[userId];
+
+    // Handle real-time message
+    socket.on("sendMessage", async (messageData) => {
+      try {
+        // Save message to the database
+        const newMessage = await Message.create(messageData);
+  
+        console.log("New message saved:", newMessage);
+  
+        // Send the message to the receiver if online
+        const recipientSocketId = users[messageData.receiverId];
+        if (recipientSocketId) {
+          io.to(recipientSocketId).emit("receiveMessage", newMessage);
+          console.log(`Message sent to user ${messageData.receiverId}`);
+        }
+      } catch (error) {
+        console.error("Error saving message:", error);
       }
     });
-
-    io.emit("onlineUsers", Object.keys(users));
+  
+    // Handle user disconnect
+    socket.on("disconnect", () => {
+      console.log("User disconnected:", socket.id);
+      Object.keys(users).forEach((userId) => {
+        if (users[userId] === socket.id) {
+          delete users[userId];
+        }
+      });
+      io.emit("onlineUsers", Object.keys(users));
+    });
   });
-});
+  
+  // Handle user disconnect
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected:", socket.id);
+
+//     Object.keys(users).forEach((userId) => {
+//       if (users[userId] === socket.id) {
+//         delete users[userId];
+//       }
+//     });
+
+//     io.emit("onlineUsers", Object.keys(users));
+//   });
+// });
 
 // Export users and io for use in other files
-console.log("Users connected:", users);
 module.exports = { users, io };
 
 // Start the server
@@ -199,5 +212,6 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
 
 

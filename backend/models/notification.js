@@ -46,7 +46,7 @@ const notificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["booking", "review", "reminder", "update", "promotion"],
+    enum: ["booking", "review", "reminder", "update", "promotion" , "message"], // Type of notification
     required: true,
   },
   message: {
@@ -59,11 +59,11 @@ const notificationSchema = new mongoose.Schema({
   },
   targetType: {
     type: String,
-    enum: ["service", "booking", "review", "profile"],
+    enum: ["service", "booking", "review", "profile" , "message"], 
     // required: true,
   },
   isRead: {
-    type: Boolean,
+    type: Boolean, 
     default: false,
   },
   createdAt: {

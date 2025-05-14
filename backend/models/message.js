@@ -7,7 +7,7 @@ const messageSchema = new mongoose.Schema(
       ref: "Conversation", // Links the message to a specific conversation
       required: true,
     },
-    sender: {
+    sender: { 
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // References the sender
       required: true,

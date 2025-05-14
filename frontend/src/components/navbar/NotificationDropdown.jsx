@@ -118,63 +118,204 @@
 // export default NotificationDropdown;
 
 
+// import { FiBell } from "react-icons/fi";
+// import "./NotificationDropdown.css";
+// import { Link } from "react-router-dom";
+
+// const NotificationDropdown = ({
+//   unreadCount,
+//   notifications,
+//   showNotifDropdown,
+//   setShowNotifDropdown,
+//   markAllAsRead,
+//   notifDropdownRef,
+// }) => (
+//   <div className="notification-container">
+//     <FiBell
+//       className="notification-icon"
+//       onClick={() => {
+//         const next = !showNotifDropdown;
+//         setShowNotifDropdown(next);
+//         if (next) markAllAsRead();
+//       }}
+//     />
+//     {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+//     {showNotifDropdown && (
+//       <div ref={notifDropdownRef} className="notification-dropdown">
+//         {notifications.length === 0 ? (
+//           <p className="notification-empty">No notifications</p>
+//         ) : (
+//           notifications.map((notif, index) => {
+//             let targetUrl = "/";
+            
+//             // Determine the target URL based on notification type
+//             if (notif.targetType === "booking") {
+//               targetUrl = `/bookings/${notif.targetId}`;
+//             } else if (notif.targetType === "service") {
+//               targetUrl = `/services/${notif.targetId}`;
+//             } else if (notif.targetType === "profile") {
+//               targetUrl = `/users/${notif.targetId}`;
+//             } else if (notif.targetType === "review") {
+//               targetUrl = `/reviews/${notif.targetId}`;
+//             }
+
+//             return (
+//               <Link
+//                 key={index}
+//                 to={targetUrl}
+//                 className={`notification-item ${!notif.isRead ? "unread" : ""}`}
+//                 onClick={() => setShowNotifDropdown(false)}
+//               >
+//                 <span className="notification-message">{notif.message}</span>
+//                 {!notif.isRead && <span className="notification-indicator" />}
+//               </Link>
+//             );
+//           })
+//         )}
+//       </div>
+//     )}
+//   </div>
+// );
+
+// export default NotificationDropdown;
+
+// import { useEffect, useState } from "react";
+// import { FiBell } from "react-icons/fi";
+// import { Link } from "react-router-dom";
+// import socket from "../../socket";
+// import "./NotificationDropdown.css";
+
+// const NotificationDropdown = ({
+//   unreadCount,
+//   notifications,
+//   setNotifications,
+//   showNotifDropdown,
+//   setShowNotifDropdown,
+//   markAllAsRead,
+//   notifDropdownRef,
+// }) => {
+//   // Handle real-time notifications
+//   useEffect(() => {
+//     socket.on("newNotification", (newNotif) => {
+//       setNotifications((prevNotifications) => [newNotif, ...prevNotifications]);
+//     });
+
+//     // Clean up the event listener on unmount
+//     return () => socket.off("newNotification");
+//   }, [setNotifications]);
+
+//   return (
+//     <div className="notification-container">
+//       <FiBell
+//         className="notification-icon"
+//         onClick={() => {
+//           const next = !showNotifDropdown;
+//           setShowNotifDropdown(next);
+//           if (next) markAllAsRead();
+//         }}
+//       />
+//       {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+//       {showNotifDropdown && (
+//         <div ref={notifDropdownRef} className="notification-dropdown">
+//           {notifications.length === 0 ? (
+//             <p className="notification-empty">No notifications</p>
+//           ) : (
+//             notifications.map((notif, index) => {
+//               let targetUrl = "/";
+//               if (notif.targetType === "booking") targetUrl = `/bookings/${notif.targetId}`;
+//               else if (notif.targetType === "service") targetUrl = `/services/${notif.targetId}`;
+//               else if (notif.targetType === "profile") targetUrl = `/users/${notif.targetId}`;
+//               else if (notif.targetType === "review") targetUrl = `/reviews/${notif.targetId}`;
+//               else if (notif.targetType === "message") targetUrl = `/reviews/${notif.targetId}`;
+
+//               return (
+//                 <Link
+//                   key={notif._id || index}
+//                   to={targetUrl}
+//                   className={`notification-item ${!notif.isRead ? "unread" : ""}`}
+//                   onClick={() => setShowNotifDropdown(false)}
+//                 >
+//                   <span className="notification-message">{notif.message}</span>
+//                   {!notif.isRead && <span className="notification-indicator" />}
+//                 </Link>
+//               );
+//             })
+//           )}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default NotificationDropdown;
+
+
+import { useEffect, useState } from "react";
 import { FiBell } from "react-icons/fi";
-import "./NotificationDropdown.css";
 import { Link } from "react-router-dom";
+import socket from "../../socket";
+import "./NotificationDropdown.css";
 
 const NotificationDropdown = ({
   unreadCount,
   notifications,
+  setNotifications,
   showNotifDropdown,
   setShowNotifDropdown,
   markAllAsRead,
   notifDropdownRef,
-}) => (
-  <div className="notification-container">
-    <FiBell
-      className="notification-icon"
-      onClick={() => {
-        const next = !showNotifDropdown;
-        setShowNotifDropdown(next);
-        if (next) markAllAsRead();
-      }}
-    />
-    {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
-    {showNotifDropdown && (
-      <div ref={notifDropdownRef} className="notification-dropdown">
-        {notifications.length === 0 ? (
-          <p className="notification-empty">No notifications</p>
-        ) : (
-          notifications.map((notif, index) => {
-            let targetUrl = "/";
-            
-            // Determine the target URL based on notification type
-            if (notif.targetType === "booking") {
-              targetUrl = `/bookings/${notif.targetId}`;
-            } else if (notif.targetType === "service") {
-              targetUrl = `/services/${notif.targetId}`;
-            } else if (notif.targetType === "profile") {
-              targetUrl = `/users/${notif.targetId}`;
-            } else if (notif.targetType === "review") {
-              targetUrl = `/reviews/${notif.targetId}`;
-            }
+}) => {
+  // Handle real-time notifications
+  useEffect(() => {
+    socket.on("newNotification", (newNotif) => {
+      setNotifications((prevNotifications) => [newNotif, ...prevNotifications]);
+    });
 
-            return (
-              <Link
-                key={index}
-                to={targetUrl}
-                className={`notification-item ${!notif.isRead ? "unread" : ""}`}
-                onClick={() => setShowNotifDropdown(false)}
-              >
-                <span className="notification-message">{notif.message}</span>
-                {!notif.isRead && <span className="notification-indicator" />}
-              </Link>
-            );
-          })
-        )}
-      </div>
-    )}
-  </div>
-);
+    // Clean up the event listener on unmount
+    return () => socket.off("newNotification");
+  }, [setNotifications]);
+
+  return (
+    <div className="notification-container">
+      <FiBell
+        className="notification-icon"
+        onClick={() => {
+          const next = !showNotifDropdown;
+          setShowNotifDropdown(next);
+          if (next) markAllAsRead();
+        }}
+      />
+      {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+      {showNotifDropdown && (
+        <div ref={notifDropdownRef} className="notification-dropdown">
+          {notifications.length === 0 ? (
+            <p className="notification-empty">No notifications</p>
+          ) : (
+            notifications.map((notif, index) => {
+              let targetUrl = "/";
+              if (notif.targetType === "booking") targetUrl = `/bookings/${notif.targetId}`;
+              else if (notif.targetType === "service") targetUrl = `/services/${notif.targetId}`;
+              else if (notif.targetType === "profile") targetUrl = `/users/${notif.targetId}`;
+              else if (notif.targetType === "review") targetUrl = `/reviews/${notif.targetId}`;
+              else if (notif.targetType === "message") targetUrl = `/services/${notif.targetId}`;
+
+              return (
+                <Link
+                  key={notif._id || index}
+                  to={targetUrl}
+                  className={`notification-item ${!notif.isRead ? "unread" : ""}`}
+                  onClick={() => setShowNotifDropdown(false)}
+                >
+                  <span className="notification-message">{notif.message}</span>
+                  {!notif.isRead && <span className="notification-indicator" />}
+                </Link>
+              );
+            })
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default NotificationDropdown;

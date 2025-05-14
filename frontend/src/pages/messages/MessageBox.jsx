@@ -60,6 +60,7 @@ const MessageBox = ({ receiverId, serviceId }) => {
                 senderId={senderId}
                 receiverId={receiverId}
                 user={user}
+                serviceId={serviceId}
               />
             ) : (
               <ConversationList

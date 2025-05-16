@@ -21,9 +21,16 @@ const MainLayout = ({ requireAuth = false }) => {
   }
 
   // If authentication is required and the user is not authenticated, redirect to login
+  // if (requireAuth && !user) {
+  //   return <Navigate to="/login" state={{ from: location }} replace />;
+  // }
+
+
+  /// If authentication is required and the user is not authenticated, redirect to login
   if (requireAuth && !user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
+  
 
   // Render the layout with the outlet for nested routes
   return (
@@ -41,3 +48,4 @@ const MainLayout = ({ requireAuth = false }) => {
 };
 
 export default MainLayout;
+

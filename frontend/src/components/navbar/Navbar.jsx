@@ -14,7 +14,8 @@ import UserMenu from "./UserMenu";
 import { logoutUser } from "../../redux/AuthSlice";
 // import CategoryDropdown from "./CategoryDropdown";
 import CategoryMenu from "./CategoryMenu";
-
+import { persistStore } from "redux-persist";
+import store from "../../redux/store";  // Make sure this path is correct
 
 import "./Navbar.css";
 
@@ -87,6 +88,13 @@ const Navbar = () => {
   }, [user]);
 
   const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("authToken");
+    
+  // Purge the entire Redux persist store
+  const persistor = persistStore(store);
+  persistor.purge();
+
     dispatch(logoutUser());
     navigate("/");
     window.location.reload();

@@ -45,6 +45,7 @@ const messageRoutes = require("./routes/messageRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const faqRoutes = require("./routes/faqRoutes");
 const conversationRoutes = require("./routes/conversationRoutes");
+const userProfileRoutes = require("./routes/userProfileRoutes");
  
 // Route Middlewares
 app.use("/api/auth", authRoutes); 
@@ -58,6 +59,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/faqs", faqRoutes);
 app.use("/api/conversations", conversationRoutes);
+app.use("/api/userProfiles", userProfileRoutes);
 
 
 const authenticateJWT = require("./middlewares/authenticateJWT");

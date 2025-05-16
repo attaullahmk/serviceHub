@@ -33,9 +33,10 @@
 
 
 // updat version for notafication slice and auth slice
+// src/redux/store.js
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // Defaults to localStorage for web
+import storage from "redux-persist/lib/storage";
 import authReducer from "./AuthSlice";
 import notificationReducer from "./notificationSlice"; // Import the new notification reducer
 
@@ -43,6 +44,7 @@ import notificationReducer from "./notificationSlice"; // Import the new notific
 const persistConfig = {
   key: "auth",
   storage,
+  whitelist: ["user", "token"],
 };
 
 // Create persisted reducer for auth
@@ -51,13 +53,13 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 // Configure the store
 const store = configureStore({
   reducer: {
-    auth: persistedAuthReducer, // Use persisted reducer for auth
-    notifications: notificationReducer, // Add notifications reducer to the store
+    auth: persistedAuthReducer,
+    notifications: notificationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST'], // Ignore persist-related actions
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
       },
     }),
 });

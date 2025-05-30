@@ -490,7 +490,7 @@ const BookingForm = ({ service }) => {
         className="booking-card shadow-lg p-4 w-100"
         style={{ maxWidth: "500px", borderRadius: "20px" }}
       >
-        <h3 className="text-center mb-4 fw-bold">Book Service</h3>
+        <h3 className="text-center mb-4 fw-bold"> Reserve Service</h3>
         {error && <Alert variant="danger">{error}</Alert>}
         {success && <Alert variant="success">{success}</Alert>}
 
@@ -506,8 +506,8 @@ const BookingForm = ({ service }) => {
             />
           </Form.Group>
 
-          <Form.Group controlId="totalPrice" className="mb-4">
-            <Form.Label className="fw-semibold">Total Price</Form.Label>
+          <Form.Group controlId="totalPrice " className="mb-4">
+            <Form.Label className="fw-semibold">Rs{totalPrice} for 1 hour</Form.Label>
             <Form.Control
               type="number"
               value={totalPrice}
@@ -537,9 +537,10 @@ const BookingForm = ({ service }) => {
             {loading ? (
               <Spinner as="span" animation="border" size="sm" />
             ) : (
-              "Book Now"
+              "Reserve Now"
             )}
           </Button>
+          <p className="text-center mt-3">You won't be charged yet.</p>
         </Form>
       </Card>
     </Container>

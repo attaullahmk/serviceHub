@@ -154,6 +154,13 @@ const handleCategorySelect = (category) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
+
+
+
+  
+
+
   return (
     <>
       <nav
@@ -225,6 +232,7 @@ const handleCategorySelect = (category) => {
 />
 
                   <UserMenu
+              
                     user={user}
                     setShowAuthPopover={setShowAuthPopover}
                     showAuthPopover={showAuthPopover}

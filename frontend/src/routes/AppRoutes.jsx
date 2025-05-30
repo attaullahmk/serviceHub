@@ -196,7 +196,7 @@ const AppRoutes = () => {
         {/* 404 Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

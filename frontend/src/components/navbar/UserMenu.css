@@ -1,30 +1,130 @@
+.user-popover-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Show username on hover below the picture */
+.user-popover-container:hover::after {
+  content: attr(data-username);
+  position: absolute;
+
+  /* Remove background color */
+  background: none;
+
+  color: rgb(10, 87, 199); /* Your desired text color */
+  font-size: 14px;
+
+  /* Position below the profile picture */
+  top: 100%; /* Position directly below the container */
+  left: 50%;
+  transform: translateX(-50%);
+  /* margin-top: 2px; */
+  /* Push it slightly down from the bottom */
+
+  white-space: nowrap;
+  z-index: 10;
+
+  /* No border or extra effects */
+  border: none;
+  padding: 0;
+}
+
+
+/* ✅ Custom Button Styles (no Bootstrap) */
+.btn-username {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  
+    border: none;
+    background-color: rgb(255 255 255 / 80%);
+    color: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+      margin-top: 10px;
+}
+
+/* ✅ Profile Picture inside button */
+.profile-pic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* ✅ Show only username on hover — no other effect */
+.btn-username:hover {
+    background-color: rgb(255 255 255 / 80%);
+}
+
+/* .btn-username:hover::after {
+    content: attr(data-username);
+    position: absolute;
+    background-color: rgb(255 255 255 / 90%);
+    color: rgb(10, 87, 199);
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 1;
+    visibility: visible;
+    z-index: 10;
+} */
+
+.btn-username::after {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+}
+
+/* ✅ Popover Menu Items */
+.popover-menu {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    min-width: 180px;
+    z-index: 100;
+}
+
 .popover-item {
     display: flex;
     align-items: center;
     padding: 8px 12px;
-    text-decoration: none; /* ✅ Remove underline */
-    color: #000; /* or your theme color */
-    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #000;
     font-weight: 500;
-  }
-  
-  .popover-item:hover {
-    background-color: #f1f1f1; /* Light hover background */
-    text-decoration: none; /* ✅ Still no underline on hover */
-  }
-  
-  .logout-btn {
+    transition: background-color 0.3s ease;
+}
+
+.popover-item:hover {
+    background-color: #f1f1f1;
+    text-decoration: none;
+}
+
+/* ✅ Logout Button Style */
+.logout-btn {
     background: none;
     border: none;
     width: 100%;
     text-align: left;
     cursor: pointer;
     font-weight: 500;
-    color: #d9534f; /* Logout in red (you can change) */
-  }
-  
-  .logout-btn:hover {
+    color: #d9534f;
+}
+
+.logout-btn:hover {
     background-color: #f1f1f1;
-    text-decoration: none;
-  }
-  
+}
+

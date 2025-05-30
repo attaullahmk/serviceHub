@@ -25,3 +25,24 @@ html, body {
     position: relative;
   }
   
+
+/* this change for footer  */
+
+  /* Ensure body and html take full height */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Make the app container a flex column */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Content grows to fill space */
+.main-content {
+  flex: 1;
+}

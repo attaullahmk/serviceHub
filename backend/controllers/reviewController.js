@@ -65,6 +65,37 @@ const getAllReviews = async (req, res) => {
   });
 };
 
+
+// controllers/reviewController.js
+// const getAllReviews = async (req, res) => {
+//   try {
+//     const reviews = await Review.find()
+//       .populate({
+//         path: "userId",
+//         select: "name email",
+//         populate: {
+//           path: "profile",
+//           select: "profilePicture"
+//         }
+//       })
+//       .populate("serviceId", "title");
+// console.log(reviews, "reviews in getAllReviews");
+//     res.status(200).json({
+//       success: true,
+//       reviews: reviews.map(review => ({
+//         ...review._doc,
+//         userProfile: review.userId.profile || null
+//       }))
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: "Failed to fetch reviews",
+//       error: error.message
+//     });
+//   }
+// };
+
 // Get a review by ID
 const getReviewById = async (req, res) => {
   const { id } = req.params;

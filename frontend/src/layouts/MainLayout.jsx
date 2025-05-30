@@ -1,5 +1,5 @@
 import { Outlet, Navigate, useLocation } from 'react-router-dom';
-
+import Footer from '../components/footer/Footer';
 import { useSelector } from 'react-redux';
 
 
@@ -43,6 +43,7 @@ const MainLayout = ({ requireAuth = false }) => {
         <Outlet />
  
       </main>
+      <Footer />
     </div>
   );
 };

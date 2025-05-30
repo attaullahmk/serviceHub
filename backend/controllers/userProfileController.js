@@ -73,6 +73,9 @@ const createProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   const { userId } = req.params;
   const profileData = req.body;
+  console.log("userId", userId);
+  console.log("profileData", profileData);
+  console.log("req.file", req.file);
 
   try {
     // Check if the profile exists
@@ -114,6 +117,7 @@ console.log("userProfile", userProfile);
 // 🔹 Get User Profile
 const getProfile = async (req, res) => {
   const { userId } = req.params;
+  console.log("userId to get profile ", userId);
   
   try {
     const userProfile = await UserProfile.findOne({ user: userId }).populate("favorites", "name description");

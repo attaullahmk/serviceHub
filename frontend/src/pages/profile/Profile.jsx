@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { FaUserEdit, FaCamera, FaStar, FaBookmark, FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaCheckCircle } from "react-icons/fa";
+import { 
+  FaUserEdit, 
+  FaCamera, 
+  FaStar, 
+  FaBookmark, 
+  FaFacebook, 
+  FaTwitter, 
+  FaInstagram, 
+  FaLinkedin, 
+  FaCheckCircle,
+  FaTimes,
+  FaPlus,
+  FaTrash
+} from "react-icons/fa";
 import "./Profile.css";
 import logo from "../../assets/image/logo.jpg";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function Profile() {
@@ -12,15 +26,43 @@ function Profile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [editing, setEditing] = useState(false);
-    const [formData, setFormData] = useState({ bio: "", location: "", contactNumber: "", experience: { years: 0, skills: [] }, socialLinks: { facebook: "", twitter: "", instagram: "", linkedin: "" } });
+    const [formData, setFormData] = useState({
+      bio: "",
+      location: "",
+      contactNumber: "",
+      experience: { years: 0, skills: [] },
+      socialLinks: { 
+        facebook: "", 
+        twitter: "", 
+        instagram: "", 
+        linkedin: "" 
+      }
+    });
     const [selectedFile, setSelectedFile] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
+    const [newSkill, setNewSkill] = useState("");
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}/api/userProfiles/${user._id}`);
                 setProfile(response.data.profile);
-                setFormData(response.data.profile);
+                setFormData({
+                  bio: response.data.profile.bio || "",
+                  location: response.data.profile.location || "",
+                  contactNumber: response.data.profile.contactNumber || "",
+                  experience: {
+                    years: response.data.profile.experience?.years || 0,
+                    skills: response.data.profile.experience?.skills || []
+                  },
+                  socialLinks: {
+                    facebook: response.data.profile.socialLinks?.facebook || "",
+                    twitter: response.data.profile.socialLinks?.twitter || "",
+                    instagram: response.data.profile.socialLinks?.instagram || "",
+                    linkedin: response.data.profile.socialLinks?.linkedin || ""
+                  }
+                });
+                setPreviewImage(response.data.profile.profilePicture || logo);
             } catch (err) {
                 setError("Failed to load profile");
             } finally {
@@ -32,15 +74,63 @@ function Profile() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSocialLinkChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            socialLinks: {
+                ...prev.socialLinks,
+                [name]: value
+            }
+        }));
+    };
+
+    const handleExperienceChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            experience: {
+                ...prev.experience,
+                [name]: name === 'years' ? parseInt(value) : value
+            }
         }));
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file) setSelectedFile(file);
+        if (file) {
+            setSelectedFile(file);
+            setPreviewImage(URL.createObjectURL(file));
+        }
+    };
+
+    const addSkill = () => {
+        if (newSkill.trim() && !formData.experience.skills.includes(newSkill.trim())) {
+            setFormData(prev => ({
+                ...prev,
+                experience: {
+                    ...prev.experience,
+                    skills: [...prev.experience.skills, newSkill.trim()]
+                }
+            }));
+            setNewSkill("");
+        }
+    };
+
+    const removeSkill = (skillToRemove) => {
+        setFormData(prev => ({
+            ...prev,
+            experience: {
+                ...prev.experience,
+                skills: prev.experience.skills.filter(skill => skill !== skillToRemove)
+            }
+        }));
     };
 
     const handleSave = async () => {
@@ -51,10 +141,18 @@ function Profile() {
             form.append("location", formData.location);
             form.append("contactNumber", formData.contactNumber);
             form.append("experience[years]", formData.experience.years);
-            formData.experience.skills.forEach((skill, index) => form.append(`experience[skills][${index}]`, skill));
-            Object.entries(formData.socialLinks).forEach(([key, value]) => form.append(`socialLinks[${key}]`, value));
+            formData.experience.skills.forEach((skill, index) => 
+                form.append(`experience[skills][${index}]`, skill)
+            );
+            Object.entries(formData.socialLinks).forEach(([key, value]) => 
+                form.append(`socialLinks[${key}]`, value)
+            );
 
-            const response = await axios.put(`${BASE_URL}/api/userProfiles/${user._id}`, form);
+            const response = await axios.put(`${BASE_URL}/api/userProfiles/${user._id}`, form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             setProfile(response.data.profile);
             setEditing(false);
             setSelectedFile(null);
@@ -64,44 +162,263 @@ function Profile() {
         }
     };
 
-    if (loading) return <div className="profile-loading">Loading...</div>;
-    if (error) return <div className="profile-error">{error}</div>;
-console.log("Profile data:", profile);
+    if (loading) return (
+        <div className="loading-container">
+            <div className="spinner"></div>
+            <p>Loading your profile...</p>
+        </div>
+    );
+    
+    if (error) return (
+        <div className="error-container">
+            <p className="error-message">{error}</p>
+            <button onClick={() => window.location.reload()}>Try Again</button>
+        </div>
+    );
+
     return (
         <div className="profile-container">
-            <div className="profile-card">
-                <img src={profile?.profilePicture || logo } alt="Profile" className="profile-img" />
-                {editing && (
-                    <div className="file-input-container">
-                        <input type="file" onChange={handleFileChange} accept="image/*" />
-                    </div>
-                )}
-                <h2>{user?.name}</h2>
-                <p>{profile?.location || "Location not set"}</p>
-                <button className="edit-btn" onClick={() => setEditing(!editing)}><FaUserEdit /> {editing ? "Cancel" : "Edit Profile"}</button>
+            <div className="profile-header">
+                <h1>My Profile</h1>
+                <button 
+                    className={`edit-toggle-btn ${editing ? 'cancel' : 'edit'}`}
+                    onClick={() => setEditing(!editing)}
+                >
+                    {editing ? <><FaTimes /> Cancel</> : <><FaUserEdit /> Edit Profile</>}
+                </button>
             </div>
 
-            {editing ? (
-                <div className="profile-edit">
-                    <textarea name="bio" value={formData.bio} onChange={handleChange} placeholder="Write something about yourself..." />
-                    <input name="location" value={formData.location} onChange={handleChange} placeholder="Location" />
-                    <input name="contactNumber" value={formData.contactNumber} onChange={handleChange} placeholder="Contact Number" />
-                    <button className="save-btn" onClick={handleSave}><FaCheckCircle /> Save Changes</button>
+            <div className="profile-content">
+                <div className="profile-card">
+                    <div className="profile-image-container">
+                        <img 
+                            src={previewImage || logo} 
+                            alt="Profile" 
+                            className="profile-img" 
+                        />
+                        {editing && (
+                            <label className="image-upload-btn">
+                                <FaCamera />
+                                <input 
+                                    type="file" 
+                                    onChange={handleFileChange} 
+                                    accept="image/*" 
+                                    style={{ display: 'none' }} 
+                                />
+                            </label>
+                        )}
+                    </div>
+                    <h2>{user?.name}</h2>
+                    <p className="location">{profile?.location || "Location not set"}</p>
+                    
+                    {!editing && profile?.experience?.years > 0 && (
+                        <div className="experience-badge">
+                            <FaStar /> {profile.experience.years}+ years experience
+                        </div>
+                    )}
                 </div>
-            ) : (
+
                 <div className="profile-details">
-                    <h3>About Me</h3>
-                    <p>{profile?.bio || "No bio available"}</p>
-                    <p><strong>Contact:</strong> {profile?.contactNumber || "Not provided"}</p>
-                    <p><strong>Location:</strong> {profile?.location || "Not provided"}</p>
+                    {editing ? (
+                        <>
+                            <div className="form-section">
+                                <h3>About Me</h3>
+                                <textarea 
+                                    name="bio" 
+                                    value={formData.bio} 
+                                    onChange={handleChange} 
+                                    placeholder="Tell us about yourself..."
+                                    rows="4"
+                                />
+                            </div>
+
+                            <div className="form-section">
+                                <h3>Contact Information</h3>
+                                <div className="form-group">
+                                    <label>Location</label>
+                                    <input 
+                                        type="text" 
+                                        name="location" 
+                                        value={formData.location} 
+                                        onChange={handleChange} 
+                                        placeholder="e.g. San Francisco, CA" 
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Phone Number</label>
+                                    <input 
+                                        type="text" 
+                                        name="contactNumber" 
+                                        value={formData.contactNumber} 
+                                        onChange={handleChange} 
+                                        placeholder="+1234567890" 
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-section">
+                                <h3>Experience</h3>
+                                <div className="form-group">
+                                    <label>Years of Experience</label>
+                                    <input 
+                                        type="number" 
+                                        name="years" 
+                                        value={formData.experience.years} 
+                                        onChange={handleExperienceChange} 
+                                        min="0"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Skills</label>
+                                    <div className="skills-input">
+                                        <input 
+                                            type="text" 
+                                            value={newSkill} 
+                                            onChange={(e) => setNewSkill(e.target.value)} 
+                                            placeholder="Add a skill" 
+                                        />
+                                        <button onClick={addSkill}><FaPlus /></button>
+                                    </div>
+                                    <div className="skills-tags">
+                                        {formData.experience.skills.map((skill, index) => (
+                                            <span key={index} className="skill-tag">
+                                                {skill}
+                                                <button onClick={() => removeSkill(skill)}>
+                                                    <FaTrash />
+                                                </button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="form-section">
+                                <h3>Social Links</h3>
+                                <div className="social-input-group">
+                                    <FaFacebook className="social-icon" />
+                                    <input 
+                                        type="text" 
+                                        name="facebook" 
+                                        value={formData.socialLinks.facebook} 
+                                        onChange={handleSocialLinkChange} 
+                                        placeholder="Facebook profile URL" 
+                                    />
+                                </div>
+                                <div className="social-input-group">
+                                    <FaTwitter className="social-icon" />
+                                    <input 
+                                        type="text" 
+                                        name="twitter" 
+                                        value={formData.socialLinks.twitter} 
+                                        onChange={handleSocialLinkChange} 
+                                        placeholder="Twitter profile URL" 
+                                    />
+                                </div>
+                                <div className="social-input-group">
+                                    <FaInstagram className="social-icon" />
+                                    <input 
+                                        type="text" 
+                                        name="instagram" 
+                                        value={formData.socialLinks.instagram} 
+                                        onChange={handleSocialLinkChange} 
+                                        placeholder="Instagram profile URL" 
+                                    />
+                                </div>
+                                <div className="social-input-group">
+                                    <FaLinkedin className="social-icon" />
+                                    <input 
+                                        type="text" 
+                                        name="linkedin" 
+                                        value={formData.socialLinks.linkedin} 
+                                        onChange={handleSocialLinkChange} 
+                                        placeholder="LinkedIn profile URL" 
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-actions">
+                                <button className="save-btn" onClick={handleSave}>
+                                    <FaCheckCircle /> Save Changes
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="info-section">
+                                <h3>About Me</h3>
+                                <p className="bio">{profile?.bio || "No bio available"}</p>
+                            </div>
+
+                            <div className="info-section">
+                                <h3>Contact Information</h3>
+                                <div className="info-group">
+                                    <strong>Phone:</strong>
+                                    <span>{profile?.contactNumber || "Not provided"}</span>
+                                </div>
+                                <div className="info-group">
+                                    <strong>Location:</strong>
+                                    <span>{profile?.location || "Not provided"}</span>
+                                </div>
+                            </div>
+
+                            {profile?.experience && (
+                                <div className="info-section">
+                                    <h3>Experience</h3>
+                                    {profile.experience.years > 0 && (
+                                        <div className="info-group">
+                                            <strong>Years:</strong>
+                                            <span>{profile.experience.years} years</span>
+                                        </div>
+                                    )}
+                                    {profile.experience.skills?.length > 0 && (
+                                        <div className="info-group">
+                                            <strong>Skills:</strong>
+                                            <div className="skills-container">
+                                                {profile.experience.skills.map((skill, index) => (
+                                                    <span key={index} className="skill-badge">{skill}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {profile?.socialLinks && (
+                                <div className="info-section">
+                                    <h3>Social Links</h3>
+                                    <div className="social-links">
+                                        {profile.socialLinks.facebook && (
+                                            <a href={profile.socialLinks.facebook} target="_blank" rel="noopener noreferrer">
+                                                <FaFacebook />
+                                            </a>
+                                        )}
+                                        {profile.socialLinks.twitter && (
+                                            <a href={profile.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
+                                                <FaTwitter />
+                                            </a>
+                                        )}
+                                        {profile.socialLinks.instagram && (
+                                            <a href={profile.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                                                <FaInstagram />
+                                            </a>
+                                        )}
+                                        {profile.socialLinks.linkedin && (
+                                            <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                                                <FaLinkedin />
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
-            )}
+            </div>
         </div>
     );
 }
 
 export default Profile;
-
 
 
 

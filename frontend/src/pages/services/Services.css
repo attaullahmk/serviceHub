@@ -1,16 +1,15 @@
-.services-container {
+/* .services-container {
     padding: 2px;
   }
   
-  /* Flexbox Layout for Services Page */
+
   .services-layout {
     background-color: #F8F9FA;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
-  
-  /* Map Section (40% on large screens, 100% on mobile) */
+
   .map-container {
     flex: 0 0 40%;
     height: 100vh;
@@ -26,7 +25,7 @@
     }
   }
   
-  /* Service List Section (60% on large screens, 100% on mobile) */
+
   .services-list {
     flex: 0 0 60%;
   }
@@ -37,7 +36,7 @@
     }
   }
   
-  /* Service Cards */
+
   .service-card {
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
@@ -47,9 +46,9 @@
     transform: translateY(-5px);
   }
   
-  /* Carousel Image */
+
   .carousel-container {
-    height: 180px; /* Fixed height for images */
+    height: 180px; 
     overflow: hidden;
   }
   
@@ -58,7 +57,7 @@
     width: 100%;
     object-fit: cover;
   }
-  /* Toggle buttons styling */
+
 .btn-group .btn {
   transition: all 0.3s ease;
   border-radius: 20px !important;
@@ -66,8 +65,157 @@
   padding: 8px 25px;
 }
 
-/* Map container transition */
+
 .map-container, .services-list {
   transition: opacity 0.3s ease;
 }
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+ .services-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.services-container {
+  padding: 2px;
+  flex: 1;
+}
+.services-list{
+      margin-top: -12px;
+}
+
+.services-layout {
+  background-color: #F8F9FA;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  min-height: calc(100vh - 200px); 
+}
+
+.map-container {
+  flex: 0 0 40%;
+  height: calc(100vh - 150px); 
+  position: sticky;
+  top: 80px; 
+  overflow-y: auto;
+}
+
+@media (max-width: 992px) {
+  .map-container {
+    flex: 0 0 100%;
+    height: 400px;
+    position: relative;
+    top: auto;
+  }
+}
+
+
+.services-list {
+  flex: 0 0 60%;
+  overflow-y: auto;
+}
+
+@media (max-width: 992px) {
+  .services-list {
+    flex: 0 0 100%;
+  }
+}
+
+.service-card {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  margin-bottom: 20px;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+}
+
+.carousel-container {
+  height: 180px; 
+  overflow: hidden;
+}
+
+.service-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+
+.btn-group .btn {
+  transition: all 0.3s ease;
+  border-radius: 20px !important;
+  margin: 0 5px;
+  padding: 8px 25px;
+}
+
+
+.map-container, .services-list {
+  transition: opacity 0.3s ease;
+}
+
+
+.sidebar-toggle-btn {
+  position: absolute;
+  top: 15px;
+  /* right: 15px; */
+  left: 15px;
+  z-index: 1000;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  background: white !important;
+  color: #333 !important;
+  border: none !important;
+}
+
+.sidebar-toggle-btn:hover {
+  background: #f8f9fa !important;
+}
+
+.map-section {
+  position: relative;
+  height: 60%;
+}
+
+.booking-section {
+  height: 40%;
+}
+
+
+
+
+
+
+
+
+
+
 

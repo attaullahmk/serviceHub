@@ -2,30 +2,40 @@ import { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import ReactStars from "react-stars"; // Import ReactStars
+import ReactStars from "react-stars";
 import "./ReviewForm.css";
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const ReviewForm = ({ serviceId }) => {
+const ReviewForm = ({ serviceId, onReviewSubmit }) => {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const user = useSelector((state) => state.auth.user);
   const userId = user ? user._id : null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    setSuccess(null);
 
     if (!userId) {
       setError("You must be logged in to submit a review.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!comment.trim()) {
+      setError("Please write a review comment.");
+      setIsSubmitting(false);
       return;
     }
 
     try {
-      console.log({ serviceId, rating, comment, userId });
-
       const response = await axios.post(`${BASE_URL}/api/reviews`, {
         serviceId,
         rating,
@@ -36,51 +46,63 @@ const ReviewForm = ({ serviceId }) => {
       setSuccess("Review submitted successfully!");
       setComment("");
       setRating(5);
+      // Call the callback to update the parent component
+      if (onReviewSubmit) {
+        onReviewSubmit(response.data.review);
+      }
     } catch (err) {
       if (err.response && err.response.status === 400) {
-        console.log(err.response.data);
-        setError(err.response.data.message || "Failed to submit review. Please try again.");
+        setError(err.response.data.message || "Failed to submit review.");
       } else {
-        console.log("err",err.response.status)
-        
         setError("Failed to submit review. Please try again.");
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="mt-4">
-      <h4>Leave a Review</h4>
-      {success && <Alert variant="success">{success}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="rating">
-          <Form.Label>Rating</Form.Label>
+    <div className="review-form-container">
+      <h4 className="review-form-title ">Leave a Review</h4>
+      {success && <Alert variant="success" className="review-alert">{success}</Alert>}
+      {error && <Alert variant="danger" className="review-alert">{error}</Alert>}
+      
+      <Form onSubmit={handleSubmit} className="review-form">
+        <Form.Group controlId="rating" className="mb-4">
+          {/* <Form.Label className="rating-label">Your Rating</Form.Label> */}
           <div className="star-rating">
             <ReactStars
               count={5}
-              size={30}
+              size={36}
               value={rating}
-              onChange={(newRating) => setRating(newRating)}
-              color1={"#ddd"} // Inactive stars color
-              color2={"#ffd700"} // Active stars color (gold)
+              onChange={setRating}
+              color1={"#e0e0e0"} // Inactive stars
+              color2={"#ffb400"} // Active stars
+              half={false}
             />
+            <span className="rating-value">{rating} out of 5</span>
           </div>
         </Form.Group>
 
-        <Form.Group controlId="comment" className="mt-3">
-          <Form.Label>Comment</Form.Label>
+        <Form.Group controlId="comment" className="mb-4">
+          {/* <Form.Label className="comment-label">Your Review</Form.Label> */}
           <Form.Control
             as="textarea"
-            rows={3}
+            rows={4}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Write your review here..."
+            placeholder="Share your experience with this service..."
+            className="review-textarea"
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="mt-3">
-          Submit Review
+        <Button 
+          variant="primary" 
+          type="submit" 
+          className="submit-review-btn"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Submitting..." : "Submit Review"}
         </Button>
       </Form>
     </div>
@@ -88,3 +110,5 @@ const ReviewForm = ({ serviceId }) => {
 };
 
 export default ReviewForm;
+
+

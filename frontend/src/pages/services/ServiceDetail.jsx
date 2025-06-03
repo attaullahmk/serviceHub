@@ -276,7 +276,7 @@ useEffect(() => {
             {/* Reviews Section */}
             <Card id="reviews-section" className="mt-4 p-4">
               <div className="reviews-section">
-                <h3>Customer Reviews</h3>
+                {/* <h3>Customer Reviews</h3> */}
                 <ReviewList serviceId={service.service._id} user={user} />
                 <ReviewForm serviceId={service.service._id} />
               </div>

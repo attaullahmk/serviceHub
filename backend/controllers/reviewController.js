@@ -117,6 +117,7 @@ const getReviewById = async (req, res) => {
 const updateReviewById = async (req, res) => {
   const { id } = req.params;
   const { comment, rating } = req.body;
+  console.log({ id, comment, rating });
 
   const review = await Review.findByIdAndUpdate(
     id,

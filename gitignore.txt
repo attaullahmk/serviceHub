@@ -1,0 +1,5 @@
+this line will be paste in .gitignore file for project but i use to wrok in other machine also ...
+
+# Ignore environment files
+backend/.env
+frontend/.env

@@ -300,3 +300,36 @@
 .three-dot-button:hover {
   color: #000;
 }
+
+
+
+
+
+/* css add for reacttion icon  */
+.review-reactions {
+  display: flex;
+  gap: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  margin-top: 15px;
+}
+
+.reaction-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.reaction-icon:hover {
+  transform: scale(1.1);
+}
+
+.reaction-count {
+  font-size: 12px;
+  margin-top: 2px;
+  color: #666;
+}
+
+

@@ -1,30 +1,3 @@
-<!-- # ServiceHub
-
-ServiceHub is a local service marketplace to connect users with nearby professionals, such as doctors, drivers, electricians, and more.
-
-## Getting Started
-
-These instructions will guide you through setting up the environment to start building the project. This includes installing the necessary tools and initializing the server and client.
-
-## Prerequisites
-
-Make sure you have the following software installed on your machine:
-
-- [Node.js](https://nodejs.org/) - Runtime environment for server-side JavaScript.
-- [MongoDB](https://www.mongodb.com/) - Database for storing application data.
-- [Git](https://git-scm.com/) - Version control system to manage the project code.
-
-## Project Setup
-
-1. **Clone the Repository**
-
-   Start by cloning the project repository (you can create it on GitHub or another platform):
-
-   ```bash
-   git clone https://github.com/attaullahmk/serviceHub.git
-   cd servicehub -->
-
-
 # 🚀 ServiceHub
 
 ServiceHub is a smart local service marketplace that connects users with nearby professionals—such as doctors, drivers, electricians, and more. It simplifies the search, booking, and communication between users and service providers in one centralized platform.
@@ -150,7 +123,7 @@ EMAIL_PASS=your-email-app-password
 
 ```bash
 cd backend
-npm start
+npm run dev
 ```
 
 ### Start the Frontend Development Server
@@ -235,4 +208,6 @@ This project is licensed under the [MIT License](LICENSE).
 ## 📞 Contact
 
 **Author:** [Atta Ullah](https://github.com/attaullahmk)  
-📧 Email: [attaullahmk099@gmail.com](mailto:attaullahmk099@gmail.com)
+📧 Email: [attaullahmk099@gmail.com](mailto:attaullahmk099@gmail.com)  
+🔗 LinkedIn: [linkedin.com/in/attaullahmk](https://www.linkedin.com/in/attaullahmk)  
+📱 Phone: +92-306-1312534

@@ -307,7 +307,7 @@ const calculateTimeOnPlatform = (createdAt) => {
                     <p>{service.service.description}</p>
                   </div>
 
-                  {isOwner && (
+                  {/* {isOwner && (
                     <div className="owner-actions">
                       <Button
                         variant="outline-primary"
@@ -320,7 +320,7 @@ const calculateTimeOnPlatform = (createdAt) => {
                         Delete Service
                       </Button>
                     </div>
-                  )}
+                  )} */}
                 </Col>
               </Row>
             </Card>

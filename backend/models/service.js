@@ -8,6 +8,12 @@ const serviceSchema = new mongoose.Schema({
   address: { type: String, required: true, trim: true },
   provider: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
+// Add this field inside serviceSchema definition
+bookingCount: {
+  type: Number,
+  default: 0,
+  min: 0,
+},
 
   // ✅ Availability check
   availability: { type: Boolean, default: true },
@@ -39,6 +45,29 @@ const serviceSchema = new mongoose.Schema({
   },
 
   isDeleted: { type: Boolean, default: false },
+  isDeleted: { type: Boolean, default: false },
+
+// 🔐 Admin Moderation
+status: {
+  type: String,
+  enum: ["pending", "approved", "rejected"],
+  default: "pending",
+},
+
+rejectionReason: {
+  type: String,
+  default: "",
+  trim: true,
+},
+moderatedBy: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Admin",
+  default: null,
+},
+moderatedAt: {
+  type: Date,
+  default: null,
+},
 }, { timestamps: true });
 
 // ✅ Indexes for fast queries

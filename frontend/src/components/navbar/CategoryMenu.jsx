@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-// import { FaTools, FaCar, FaHome, FaPaintRoller } from "react-icons/fa";
-// import { MdElectricalServices } from "react-icons/md";
-// import { BsFillPersonFill } from "react-icons/bs";
+
 import "./CategoryMenu.css";
 import { FaCaretDown } from "react-icons/fa";
 import {
@@ -105,10 +103,7 @@ const CategoryMenu = ({
           }}
           ref={categoryPopoverRef}
         >
-          {/* <span className="category-btn d-flex align-items-center gap-2">
-            {category.icon && <category.icon size={18} />}
-            {category.name}
-          </span> */}
+
           <span className="category-btn d-flex align-items-center gap-2">
             {category.icon && <category.icon size={18} />}
             {category.name}
@@ -121,14 +116,7 @@ const CategoryMenu = ({
           >
             {category.subcategories.map((sub, subIndex) => (
               <li key={subIndex}>
-                {/* <button
-                //   className="dropdown-item d-flex align-items-center gap-2"
-                 className="dropdown-item rounded-1 d-flex align-items-center gap-2 px-3 py-2"
-                  onClick={() => handleCategoryClick(sub.name)}
-                >
-                  {sub.icon && <sub.icon size={14} />}
-                  {sub.name}
-                </button> */}
+            
                 {/* // Update the subcategory button in CategoryMenu */}
                 <button
                   className="dropdown-item rounded-1 d-flex align-items-center gap-2 px-3 py-2"

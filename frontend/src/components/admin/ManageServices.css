@@ -1,0 +1,78 @@
+/* .manage-services {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.service-card {
+  border-radius: 12px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.service-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+} */
+
+
+.manage-services {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+
+.service-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.3s ease;
+  border: 1px solid #e0e0e0;
+  background-color: #fff;
+}
+
+.service-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.service-card img {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  object-fit: cover;
+}
+
+.service-card .card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.service-card .card-text {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.service-card p {
+  margin-bottom: 0.5rem;
+}
+
+.service-card strong {
+  color: #444;
+}
+
+.alert {
+  max-width: 600px;
+  margin: 0 auto 20px;
+}
+
+.form-select {
+  max-width: 220px;
+}
+
+.modal-body textarea {
+  resize: none;
+}
+
+.clickable-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
+}

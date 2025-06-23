@@ -3,7 +3,7 @@
     position: relative;
     display: inline-block;
     margin-left: 1rem;
-    padding: 14px 0px;
+    padding: 17px 8px;
 }
   
   
@@ -20,8 +20,8 @@
   
   .notification-count {
     position: absolute;
-    top: -5px;
-    right: -5px;
+       top: 11px;
+    right: 2px;
     background: #ef4444;
     color: white;
     font-size: 0.7rem;
@@ -116,6 +116,7 @@
   
     .notification-container {
       margin-left: 0.5rem;
+     
     }
   }
   

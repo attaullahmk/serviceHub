@@ -5,8 +5,10 @@ import { setUser } from "../../redux/AuthSlice"; // Import Redux action
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./serviceProviderForm.css"; // Custom CSS for the form
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { useNavigate } from "react-router-dom"; // ⬅️ NEW
 const ServiceProviderForm = () => {
   // Get the current logged-in user from Redux store
+    const navigate = useNavigate(); // ⬅️ NEW
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
@@ -69,7 +71,7 @@ const ServiceProviderForm = () => {
       dispatch(setUser(updatedUser)); // Update Redux state
 
       setMessage(response.data.message || "Service Provider created successfully. Your role has been updated to provider.");
-      
+        navigate("/createService"); // ⬅️ NEW
       // Reset form data after successful submission
       setFormData({
         phone: "",

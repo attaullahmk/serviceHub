@@ -7,6 +7,7 @@ import Slider from "./Slider";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 // const BASE_URL = 'http://localhost:3000';
 console.log("BASE_URL", BASE_URL); // Check the base URL
+import ReactStars from "react-stars";
 
 const ServiceCards = () => {
   const [latestServices, setLatestServices] = useState([]);
@@ -72,10 +73,24 @@ const ServiceCards = () => {
             {/* Text Section */}
             <Card.Body className="d-flex flex-column justify-content-center" style={{ height: "150px" }}>
               <Card.Title className="text-truncate">{service.title}</Card.Title>
+               <div className="d-flex align-items-center">
+                              <ReactStars
+                                count={5}
+                                value={service.averageRating || 0}
+                                size={18}
+                                color1="#e0e0e0"
+                                color2="#ffc107"
+                                edit={false}
+                                half={true}
+                              />
+                              <span className="ms-2 small text-muted">
+                                {service.averageRating?.toFixed(1)} ({service.totalReviews || 0})
+                              </span>
+                            </div>
               <Card.Text className="text-truncate">
                 {service.description?.slice(0, 50)}...
               </Card.Text>
-              <Card.Text className="fw-bold text-primary">Price: ${service.price}</Card.Text>
+              <Card.Text className="fw-bold text-primary">Rs: {service.price}</Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -88,7 +103,7 @@ const ServiceCards = () => {
   return (
     <>
       <Slider />
-      <Container className="my-4 px-4">
+      <Container className="my-4 px-4 py">
         {/* Latest Services */}
         <h1 className="text-center">Latest Update</h1>
         <Row className="g-4 justify-content-center">

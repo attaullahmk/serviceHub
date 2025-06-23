@@ -1,8 +1,4 @@
-// const Service = require("../models/service");
-// const ExpressError = require("../utils/ExpressError");
 
-// Create a new service
-// const Service = require("../models/service");
 const Service = require('../models/service'); // If file is "service.js"
 
 
@@ -53,22 +49,6 @@ const getAllServices = async (req, res) => {
   });
 };
 
-// Get a single service by ID
-// const getServiceById = async (req, res) => {
-
-//   const { id } = req.params;
-//   // console.log(id);
-//   const service = await Service.findById(id).populate("provider", "name email");
-
-//   if (!service) {
-//     throw new ExpressError(404, "Service not found");
-//   }
-
-//   res.status(200).json({
-//     success: true,
-//     service,
-//   });
-// };
 
 const getServiceById = async (req, res) => {
   const { id } = req.params;
@@ -141,42 +121,7 @@ const deleteServiceById = async (req, res) => {
 };
 
 
-//search 
-// const searchServices = async (req, res) => {
-//   try {
-//     const { category, title, address } = req.query;
-//  console.log( {category, title, address })
-//     if (!category && !title && !address) {
-//       return res.status(400).json({ message: "Please provide at least one search parameter." });
-//     }
 
-//     // Build a dynamic query object
-//     const query = {};
-//     if (category) {
-//       query.category = { $regex: new RegExp(category, "i") }; // Case-insensitive search
-//     }
-//     if (title) {
-//       query.title = { $regex: new RegExp(title, "i") };
-//     }
-//     if (address) {
-//       query.address = { $regex: new RegExp(address, "i") };
-//     }
-
-//     const services = await Service.find(query).populate("provider", "name email");
-
-//     if (services.length === 0) {
-//       return res.status(404).json({ message: "No services found matching the criteria." });
-//     }
-
-//     res.status(200).json({
-//       success: true,
-//       services,
-//     });
-//   } catch (error) {
-//     console.error("Error searching services:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   } 
-// };
 const searchServices = async (req, res) => {
   try {
     const { category, title, address, sortByPrice, sortByRating, availability, priceRange } = req.query;
@@ -219,7 +164,6 @@ const searchServices = async (req, res) => {
       .populate("provider", "name email")
       .sort(sortOptions);
 
-    // console.log("Filtered Services:", services.map(s => ({ title: s.title, availability: s.availability })));
 
     res.status(200).json({
       success: true,
@@ -230,11 +174,6 @@ const searchServices = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
-
-
-// module.exports = { searchServices };
 
 
 
@@ -257,35 +196,6 @@ const getServicesByProviderId = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-// Get top-rated services
-// const getTopRatedServices = async (req, res) => {
-//   try {
-//     const topRatedServices = await Service.find({ isDeleted: false }) // Exclude deleted services
-//       .sort({ averageRating: -1 }) // Sort by highest average rating
-//       .limit(10) // Get top 10 highest-rated services
-//       .populate("provider", "name email");
-
-//     res.status(200).json({
-//       success: true,
-//       services: topRatedServices,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching top-rated services:", error);
-//     res.status(500).json({ success: false, message: "Internal server error" });
-//   }
-// };
 
 const getTopRatedServices = async (req, res) => {
   try {
@@ -342,19 +252,3 @@ module.exports = {
   getTopRatedServices, // Added new route
   getLatestServices, // Added new route
 };
-
-
-
-
-// module.exports = {
-//   createService,
-//   getAllServices,
-//   getServiceById,
-//   updateServiceById,
-//   deleteServiceById,
-//   searchServices,
-
-//   // searchServicesByCategory,
-//   // searchServicesByAddressOrTitle, // New function added
-// };
-

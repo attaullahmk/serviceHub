@@ -5,7 +5,8 @@ import { useSelector } from 'react-redux';
 
 const MainLayout = ({ requireAuth = false }) => {
   const location = useLocation();
-
+console.log(location,"location")
+console.log(location.pathname,"location.pathname")
   // Access Redux state using useSelector
   const { user, loading } = useSelector((state) => state.auth);
 

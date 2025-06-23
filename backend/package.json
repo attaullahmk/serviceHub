@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "ServiceHub is a local service marketplace to connect users with nearby professionals, such as doctors, drivers, electricians, and more.",
   "main": "index.js",
+ 
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+     "create-admin": "node initdb.js"
   },
   "author": "attaullah",
   "license": "ISC",

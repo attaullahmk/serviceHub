@@ -27,7 +27,7 @@ router.get(
     }
 
     const { user, token, isNewUser } = req.user; // Extract isNewUser flag
-
+console.log("User authenticated via Google:", req.user);
     try {
       if (isNewUser) {
         console.log("✅ New Google user detected, sending email...");
@@ -46,7 +46,9 @@ router.get(
     }
 
     // ✅ Redirect User to Frontend with Token
+    console.log("✅ Google authentication successful, redirecting to frontend...", token);
     res.redirect(`http://localhost:5173/signup?token=${token}`);
+    
   }
 );
 

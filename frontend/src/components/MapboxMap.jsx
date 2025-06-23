@@ -16,7 +16,7 @@ const MapboxMap = ({ services }) => {
 
     const maptoken = import.meta.env.VITE_MAPBOX_TOKEN;
     mapboxgl.accessToken = maptoken;
-
+console.log(services.imageGallery, "services in MapboxMap");
     const fetchGeolocation = async () => {
       try {
         const geolocationPromises = services.map(service =>
@@ -78,16 +78,20 @@ const MapboxMap = ({ services }) => {
             <div class="map-popup-card">
               <div class="image-carousel">
                 ${service.imageGallery?.length ? `
-                  <div class="carousel-container">
+                  <div class="carousel-container-map">
                     ${service.imageGallery.map((img, index) => `
+                      ${console.log(img, "img in MapboxMap")}
                       <img 
                         src="${img}" 
                         alt="Service ${index + 1}" 
                         class="${index === 0 ? 'active' : ''}"
                         data-index="${index}"
                       />
+                      
+ 
                     `).join('')}
                   </div>
+                  
                   ${service.imageGallery.length > 1 ? `
                     <div class="carousel-controls">
                       <div class="carousel-dots">

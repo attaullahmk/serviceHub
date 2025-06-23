@@ -1,0 +1,9 @@
+.admin-service-detail img {
+  max-height: 350px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.admin-service-detail p {
+  font-size: 0.95rem;
+}

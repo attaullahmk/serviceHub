@@ -217,7 +217,7 @@ const [bookingToDelete, setBookingToDelete] = useState(null);
             <>
               <p className="text-muted">Client booking information</p>
               <p>
-                <strong>Service:</strong> {selectedBooking.service.title}
+                {/* <strong>Service:</strong> {selectedBooking.service.title} */}
               </p>
               <p>
                 <strong>Client:</strong> {selectedBooking.user.name}

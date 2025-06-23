@@ -27,6 +27,7 @@ app.use(cors({
 
 
 
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -35,6 +36,8 @@ app.use(passport.initialize());
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
+
+const adminRoutes = require("./routes/adminRoutes");
 const serviceProviderRoutes = require("./routes/serviceProviderRoutes");
 const userRoutes = require("./routes/userRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
@@ -46,8 +49,9 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const faqRoutes = require("./routes/faqRoutes");
 const conversationRoutes = require("./routes/conversationRoutes");
 const userProfileRoutes = require("./routes/userProfileRoutes");
- 
+
 // Route Middlewares
+app.use("/admin", adminRoutes);
 app.use("/api/auth", authRoutes); 
 app.use("/api/serviceProviders", serviceProviderRoutes);
 app.use("/api/users", userRoutes);

@@ -11,6 +11,9 @@ import { useSelector } from "react-redux";
 import Message from "../../pages/messages/MessageBox";
 import BookingForm from "../bookings/BookingForm";
 import ReviewStars from "./reviews/ReviewStars";
+
+import {FaCalendarAlt, FaMapMarkerAlt, FaPhone, FaBriefcase } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 // Ensure you have the correct path to your environment variable
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -21,6 +24,34 @@ const ServiceDetail = () => {
   const [userProfile, setUserProfile] = useState(null);
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+// ... existing state declarations ...
+  const [providerProfile, setProviderProfile] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  // Separate effect to fetch provider profile
+  useEffect(() => {
+    const fetchProviderProfile = async () => {
+      if (!service?.service?.provider?._id) return;
+      
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/userProfiles/${service.service.provider._id}`
+        );
+        console.log(response.data, "provider profile response data");
+        setProviderProfile(response.data);
+      } catch (error) {
+        console.error("Error fetching provider profile:", error);
+        setProviderProfile(null);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    // Only fetch if we have service data with a provider
+    if (service?.service?.provider?._id) {
+      fetchProviderProfile();
+    }
+  }, [service]); // Run when service data changes
 
 
 useEffect(() => {
@@ -113,6 +144,27 @@ useEffect(() => {
   const isOpen = service.service.availability;
   const reviewCount = service.service.reviews?.length || 0;
   const averageRating = service.service.averageRating || 0;
+
+const calculateTimeOnPlatform = (createdAt) => {
+  const joinDate = new Date(createdAt);
+  const currentDate = new Date();
+  const diffTime = Math.abs(currentDate - joinDate);
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays < 30) {
+    return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+  } else if (diffDays < 365) {
+    const months = Math.floor(diffDays / 30);
+    return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+  } else {
+    const years = Math.floor(diffDays / 365);
+    const remainingMonths = Math.floor((diffDays % 365) / 30);
+    if (remainingMonths > 0) {
+      return `${years} ${years === 1 ? 'year' : 'years'} and ${remainingMonths} ${remainingMonths === 1 ? 'month' : 'months'} ago`;
+    }
+    return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+  }
+};
 
   return (
     <div className="service-detail-page">
@@ -225,7 +277,7 @@ useEffect(() => {
                     <div className="service-address mb-3">
                       <p>{service.service.address}</p>
                     </div>
-                    {userProfile?.profile?.experience && (
+                    {/* {userProfile?.profile?.experience && (
   <div className="service-skills mb-3">
     <h5 className="skills-title mb-2">Skills & Expertise</h5>
        {userProfile.profile.experience.years && (
@@ -244,7 +296,7 @@ useEffect(() => {
     </div>
  
   </div>
-)}
+)} */}
 
                  
 
@@ -273,6 +325,150 @@ useEffect(() => {
               </Row>
             </Card>
 
+
+
+
+
+
+
+
+
+
+{/* Provider Profile Card - Modern Style */}
+{!profileLoading && providerProfile && (
+  <Card className="mt-4 provider-profile-card">
+    <Card.Body className="p-4">
+      <Row className="g-4 profile-row">
+        {/* Left Column - Profile Image and Basic Info */}
+        <Col md={4} className="d-flex flex-column">
+          <div className="profile-image-container mb-3 mx-auto">
+            <img
+              src={providerProfile.profilePicture || "https://images.pexels.com/photos/247851/pexels-photo-247851.jpeg"}
+              alt="Provider"
+              className="profile-image"
+            />
+          </div>
+          
+          <div className="provider-basic-info text-center">
+            <h3 className="fw-bold mb-2">{service.service.provider.name}</h3>
+             {providerProfile.profile.location && (
+                <div className="time-on-platform d-flex justify-content-center align-items-center mb-3">
+                  <FaMapMarkerAlt className="me-2 text-muted" />
+                  <span>{providerProfile.profile.location}</span>
+                </div>
+              )}
+            <div className="time-on-platform d-flex justify-content-center align-items-center mb-3">
+              <FaCalendarAlt className="me-2 text-muted" />
+              <span className="text-muted">Joined {calculateTimeOnPlatform(providerProfile.profile.createdAt)}</span>
+            </div>
+            
+            {/* Contact Info - Mobile Only */}
+            <div className="d-md-none contact-info-mobile mb-3">
+              {providerProfile.profile.location && (
+                <div className="detail-item d-flex justify-content-center">
+                  <FaMapMarkerAlt className="detail-icon me-2" />
+                  <span>{providerProfile.profile.location}</span>
+                </div>
+              )}
+              
+              {providerProfile.profile.contactNumber && (
+                <div className="detail-item d-flex justify-content-center">
+                  <FaPhone className="detail-icon me-2" />
+                  <span>{providerProfile.profile.contactNumber}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </Col>
+
+        {/* Right Column - Profile Details */}
+        <Col md={8} className="profile-details-col">
+          {/* Bio */}
+          {providerProfile.profile.bio && (
+            <div className="bio-section mb-4">
+              <h5 className="fw-semibold mb-3">About</h5>
+              <p className="bio-text">{providerProfile.profile.bio}</p>
+            </div>
+          )}
+          
+          {/* Contact Info - Desktop Only */}
+          <div className="d-none d-md-block">
+            <div className="details-grid mb-4">
+              {/* {providerProfile.profile.location && (
+                <div className="detail-item">
+                  <FaMapMarkerAlt className="detail-icon" />
+                  <span>{providerProfile.profile.location}</span>
+                </div>
+              )} */}
+              
+              {providerProfile.profile.contactNumber && (
+                <div className="detail-item">
+                  <FaPhone className="detail-icon" />
+                  <span>{providerProfile.profile.contactNumber}</span>
+                </div>
+              )}
+              
+              {providerProfile.profile.experience?.years > 0 && (
+                <div className="detail-item">
+                  <FaBriefcase className="detail-icon" />
+                  <span>{providerProfile.profile.experience.years}+ years experience</span>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Skills Section */}
+          {providerProfile.profile.experience?.skills?.length > 0 && (
+            <div className="skills-section mb-4">
+              <h5 className="fw-semibold mb-3">Skills & Expertise</h5>
+              <div className="skills-container">
+                {providerProfile.profile.experience.skills.map((skill, index) => (
+                  <Badge key={index} pill className="skill-pill me-2 mb-2">
+                    {skill}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Social Links */}
+          {(providerProfile.profile.socialLinks?.facebook || 
+            providerProfile.profile.socialLinks?.twitter || 
+            providerProfile.profile.socialLinks?.instagram || 
+            providerProfile.profile.socialLinks?.linkedin) && (
+            <div className="social-links-section">
+              <h5 className="fw-semibold mb-3">Connect</h5>
+              <div className="social-icons">
+                {providerProfile.profile.socialLinks.facebook && (
+                  <a href={providerProfile.profile.socialLinks.facebook} target="_blank" rel="noopener noreferrer">
+                    <FaFacebook className="social-icon" />
+                  </a>
+                )}
+                {providerProfile.profile.socialLinks.twitter && (
+                  <a href={providerProfile.profile.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
+                    <FaTwitter className="social-icon" />
+                  </a>
+                )}
+                {providerProfile.profile.socialLinks.instagram && (
+                  <a href={providerProfile.profile.socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                    <FaInstagram className="social-icon" />
+                  </a>
+                )}
+                {providerProfile.profile.socialLinks.linkedin && (
+                  <a href={providerProfile.profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                    <FaLinkedin className="social-icon" />
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+        </Col>
+      </Row>
+      
+    </Card.Body>
+  </Card>
+)}
+
             {/* Reviews Section */}
             <Card id="reviews-section" className="mt-4 p-4">
               <div className="reviews-section">
@@ -283,12 +479,13 @@ useEffect(() => {
             </Card>
 
             {/* Map Section */}
-            <Card className="mt-4 p-4">
+            <Card className="mt-4 p-4 map-card">
               <h2 className="map-title mb-4">Service Location</h2>
               <MapboxMap services={[service.service]} />
             </Card>
           </Col>
         </Row>
+          <Message receiverId={service.service.provider._id}  serviceId={service.service._id}/>
       </Container>
     </div>
   );

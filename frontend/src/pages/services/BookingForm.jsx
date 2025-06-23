@@ -43,8 +43,9 @@ const BookingForm = ({service }) => {
       console.log(response, "response data in booking form");
       setFormData({ category: "", area: "", offeredPrice: "", description: "" });
     } catch (error) {
-      console.error(error);
-      setErrorMessage(error.response?.data?.error || "Something went wrong!");
+      console.error(error.response?.data || error.message.message);
+      
+      setErrorMessage(error.response?.data?.message || error.message || "An error occurred while booking the service.");
     }
   };
 
@@ -82,7 +83,7 @@ const BookingForm = ({service }) => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="offeredPrice">
-            <Form.Label>Your Offered Price ($)</Form.Label>
+            <Form.Label>Your Offered Price (PKR)</Form.Label>
             <Form.Control
               type="number"
               placeholder="e.g., 50"

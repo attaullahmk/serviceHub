@@ -19,7 +19,8 @@ const authenticateJWT = require("../middlewares/authenticateJWT");
 const router = express.Router();
 
 // Define routes with validation middleware
-router.post("/", validateSchema(bookingSchema), wrapAsync(createBooking));
+// validateSchema(bookingSchema),
+router.post("/",  wrapAsync(createBooking));
 router.get("/", wrapAsync(getAllBookings));
 router.get("/user/:userId", wrapAsync(getUserBookings));
 router.post("/bookings", wrapAsync(createBookingRequest));

@@ -1,7 +1,10 @@
 // const ServiceProvider = require("../models/serviceProvider");
 // const User = require("../models/user");
 // const ExpressError = require("../utils/ExpressError");
-// const Service = require('../models/service');
+const Booking = require('../models/booking');
+const Review = require('../models/review');
+
+const Service = require('../models/service');
 const ServiceProvider = require('../models/serviceProvider');
 const ExpressError = require('../utils/ExpressError');
 
@@ -133,78 +136,87 @@ const deleteServiceProviderById = async (req, res, next) => {
   }
 }; 
 
-// Get service provider dashboard details by user ID
-// const getServiceProviderDashboard = async (req, res, next) => {
-//   try {
-//     const { id } = req.params; // User ID
-//     console.log("User ID:", id);
 
-//     // Find the service provider using the user ID
-//     const serviceProvider = await ServiceProvider.findOne({ user: id })
-//       .populate("user", "name email")
-//       .populate("services"); // Fetch associated services
 
-//     if (!serviceProvider) {
-//       throw new ExpressError(404, "Service Provider not found");
-//     }
 
-//     console.log(serviceProvider.services)
-//     res.status(200).json({
-//       success: true,
-//       message: "Service Provider dashboard fetched successfully",
-//       dashboard: {
-//         providerDetails: {
-//           name: serviceProvider.user.name,
-//           email: serviceProvider.user.email,
-//           phone: serviceProvider.phone,
-//           address: serviceProvider.address,
-//           availability: serviceProvider.availability,
-//         },
-//         services: Services, // List of services
-//       },
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-// Get service provider dashboard details by user ID
 const getServiceProviderDashboard = async (req, res, next) => {
   try {
-    const { id } = req.params; // User ID
-    console.log("User ID:", id);
+    const { id } = req.params;
 
-    // Find the service provider using the user ID and populate user details
+    // 1. Get provider basic info
     const serviceProvider = await ServiceProvider.findOne({ user: id })
-      .populate("user", "name email");
-
-      console.log(serviceProvider)
+      .populate("user", "name email phone address");
 
     if (!serviceProvider) {
       throw new ExpressError(404, "Service Provider not found");
     }
 
+    // 2. Get services
+    const services = await Service.find({ provider: serviceProvider.user._id })
+      .select('_id price category views averageRating');
+
+
+     const [bookings, reviews] = await Promise.all([
+      Booking.find({ 
+        provider: serviceProvider.user._id  // Changed from service: { $in: ... }
+      }),
+      Review.find({
+        serviceId: { $in: services.map(s => s._id) }  // Changed from service to serviceId
+      })
+    ]);
+    console.log("reviews:", reviews);
+    // console.log("Bookings:", bookings);
+
+    // 4. Calculate metrics
+    const completedBookings = bookings.filter(b => b.status === 'completed');
+    const totalEarningsFromCompleted = completedBookings.reduce((sum, booking) => {
+      return sum + (booking.totalPrice || 0);
+    }, 0);
+
+    const metrics = {
+      totalValue: services.reduce((sum, s) => sum + (s.price || 0), 0),
+      totalServices: services.length,
+      totalBookings: bookings.length,
+      completedBookings: completedBookings.length,
+      totalEarningsFromCompleted, // Added this new metric
+      totalReviews: reviews.length,
+      totalViews: services.reduce((sum, s) => sum + (s.views || 0), 0),
+      averageRating: reviews.length > 0 
+        ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length 
+        : 0,
+      categories: [...new Set(services.map(s => s.category))]
+    };
+
     res.status(200).json({
       success: true,
-      message: "Service Provider details fetched successfully",
       providerDetails: {
         name: serviceProvider.user.name,
         email: serviceProvider.user.email,
-        phone: serviceProvider.phone,
-        address: serviceProvider.address,
-        // availability: serviceProvider.availability,
-        availability: serviceProvider.availability ?? false, // Fallback if missing
-
+        phone: serviceProvider.user.phone,
+        address: serviceProvider.user.address,
+        availability: serviceProvider.availability ?? false
       },
-      
+      analytics: {
+        ...metrics,
+        categoryCount: metrics.categories.length,
+        potentialEarnings: metrics.totalValue * 1.2,
+        engagementScore: (
+          (metrics.averageRating * 2) + 
+          (metrics.totalReviews * 0.5) + 
+          (metrics.totalViews * 0.1) +
+          (metrics.totalBookings * 0.8)
+        ).toFixed(1),
+        // Added earnings percentage calculation
+        earningsPercentage: metrics.totalValue > 0 
+          ? (totalEarningsFromCompleted / metrics.totalValue) * 100 
+          : 0
+      }
     });
+
   } catch (error) {
     next(error);
   }
 };
-
-
-
 module.exports = {
   createServiceProvider,
   getAllServiceProviders,

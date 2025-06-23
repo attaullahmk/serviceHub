@@ -65,37 +65,6 @@ const getAllReviews = async (req, res) => {
   });
 };
 
-
-// controllers/reviewController.js
-// const getAllReviews = async (req, res) => {
-//   try {
-//     const reviews = await Review.find()
-//       .populate({
-//         path: "userId",
-//         select: "name email",
-//         populate: {
-//           path: "profile",
-//           select: "profilePicture"
-//         }
-//       })
-//       .populate("serviceId", "title");
-// console.log(reviews, "reviews in getAllReviews");
-//     res.status(200).json({
-//       success: true,
-//       reviews: reviews.map(review => ({
-//         ...review._doc,
-//         userProfile: review.userId.profile || null
-//       }))
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       success: false,
-//       message: "Failed to fetch reviews",
-//       error: error.message
-//     });
-//   }
-// };
-
 // Get a review by ID
 const getReviewById = async (req, res) => {
   const { id } = req.params;
@@ -113,28 +82,54 @@ const getReviewById = async (req, res) => {
   });
 };
 
+
+
 // Update a review by ID (for comment or rating changes)
-const updateReviewById = async (req, res) => {
-  const { id } = req.params;
-  const { comment, rating } = req.body;
-  console.log({ id, comment, rating });
+const updateReviewById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { comment, rating } = req.body;
 
-  const review = await Review.findByIdAndUpdate(
-    id,
-    { comment, rating },
-    { new: true, runValidators: true }
-  );
+    console.log({ id, comment, rating });
 
-  if (!review) {
-    throw new ExpressError(404, "Review not found");
+    // Find the existing review
+    const review = await Review.findById(id);
+    if (!review) {
+      return next(new ExpressError(404, "Review not found"));
+    }
+
+    // Update review fields
+    review.comment = comment || review.comment;
+    review.rating = rating ?? review.rating;
+
+    await review.save();
+
+    // Get the related service
+    const service = await Service.findById(review.serviceId);
+    if (!service) {
+      return next(new ExpressError(404, "Associated service not found"));
+    }
+
+    // Recalculate service rating and engagement
+    await service.calculateAverageRating(); // also updates engagementScore
+
+    res.status(200).json({
+      success: true,
+      message: "Review updated successfully",
+      review,
+    });
+  } catch (error) {
+    console.error("Error updating review:", error);
+    next(new ExpressError(500, "Internal Server Error"));
   }
-
-  res.status(200).json({
-    success: true,
-    message: "Review updated successfully",
-    review,
-  });
 };
+
+
+
+
+
+
+
 
 // Delete a review by ID
 const deleteReviewById = async (req, res) => {
@@ -206,135 +201,6 @@ module.exports = {
 
 
 
-
-
-
-
-
-// const Review = require("../models/review");
-// // const Service = require("../models/service");
-// const Service = require('../models/service'); // If file is "service.js"
-
-// const ExpressError = require("../utils/ExpressError");
-
-// // Create a new review
-// const createReview = async (req, res, next) => {
-//     try {
-//         const { serviceId, userId, rating, comment } = req.body;
-
-//         console.log({ serviceId, userId, rating, comment });
-
-//         // Validate service existence
-//         const service = await Service.findById(serviceId);
-//         if (!service) {
-//             return next(new ExpressError(404, "Service not found"));
-//         }
- 
-//         // Check if the user has already reviewed this service
-//         const existingReview = await Review.findOne({ serviceId, userId });
-//         if (existingReview) {
-//             return next(new ExpressError(400, "You have already reviewed this service"));
-//         }
-
-//         // Create and save the review
-//         const review = new Review({
-//             serviceId: serviceId,
-//             userId: userId,
-//             rating,
-//             comment,
-//         });
-
-//         await review.save();
-
-//         // Add review ID to the corresponding service
-//         service.reviews.push(review._id);
-//         await service.calculateAverageRating(); // Update average rating
-//         await service.save();
-
-//         res.status(201).json({
-//             success: true,
-//             message: "Review created successfully",
-//             review,
-//         });
-//     } catch (error) {
-//         console.error("Error creating review:", error);
-//         next(new ExpressError(500, "Internal Server Error"));
-//     }
-// };
-
-
-
-
-// // Get all reviews
-// const getAllReviews = async (req, res) => {
-//   const reviews = await Review.find()
-//     .populate("user", "name email")
-//     .populate("service", "title");
-
-//   res.status(200).json({
-//     success: true,
-//     reviews,
-//   });
-// };
-
-// // Get a review by ID
-// const getReviewById = async (req, res) => {
-//   const { id } = req.params;
-//   const review = await Review.findById(id)
-//     .populate("user", "name email")
-//     .populate("service", "title");
-
-//   if (!review) {
-//     throw new ExpressError(404, "Review not found");
-//   }
-
-//   res.status(200).json({
-//     success: true,
-//     review,
-//   });
-// };
-
-// // Update a review by ID
-// const updateReviewById = async (req, res) => {
-//   const { id } = req.params;
-//   const review = await Review.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
-
-//   if (!review) {
-//     throw new ExpressError(404, "Review not found");
-//   }
-
-//   res.status(200).json({
-//     success: true,
-//     message: "Review updated successfully",
-//     review,
-//   });
-// };
-
-// // Delete a review by ID
-// const deleteReviewById = async (req, res) => {
-//   const { id } = req.params;
-//   const review = await Review.findByIdAndDelete(id);
-
-//   if (!review) {
-//     throw new ExpressError(404, "Review not found");
-//   }
-
-//   // Remove review ID from the service's reviews array
-//   await Service.findByIdAndUpdate(review.service, { $pull: { reviews: id } });
-
-//   res.status(200).json({
-//     success: true,
-//     message: "Review deleted successfully",
-//   });
-// };
-
-// module.exports = {
-//   createReview,
-//   getAllReviews,
-//   getReviewById,
-//   updateReviewById,
-//   deleteReviewById,
-// };
 
 
 

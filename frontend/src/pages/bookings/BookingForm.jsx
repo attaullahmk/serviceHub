@@ -485,7 +485,7 @@ const BookingForm = ({ service }) => {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center my-5">
+    <Container className="d-flex justify-content-center align-items-center my-5 form-background">
       <Card
         className="booking-card shadow-lg p-4 w-100"
         style={{ maxWidth: "500px", borderRadius: "20px" }}
@@ -507,7 +507,7 @@ const BookingForm = ({ service }) => {
           </Form.Group>
 
           <Form.Group controlId="totalPrice " className="mb-4">
-            <Form.Label className="fw-semibold">Rs{totalPrice} for 1 hour</Form.Label>
+            <Form.Label className="fw-semibold">Rs {totalPrice} for 1 hour</Form.Label>
             <Form.Control
               type="number"
               value={totalPrice}

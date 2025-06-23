@@ -10,7 +10,7 @@ const {
 const { serviceProviderSchema, partialServiceProviderSchema } = require("../schemas/serviceProviderSchema");
 const validateSchema = require("../middlewares/validateSchema");
 const wrapAsync = require("../utils/wrapAsync");
-
+// const getProviderDashboard =require("../controllers/dashboardController.js");
 const router = express.Router();
 
 // Define routes with validation middleware
@@ -20,5 +20,8 @@ router.get("/", wrapAsync(getAllServiceProviders));
 router.put("/:id", validateSchema(partialServiceProviderSchema), wrapAsync(updateServiceProviderById));
 router.delete("/:id", wrapAsync(deleteServiceProviderById));
 router.get("/dashboard/:id", wrapAsync(getServiceProviderDashboard));
+
+// Dashboard route
+// router.get("/dashboard/:id", getProviderDashboard);
 
 module.exports = router;

@@ -96,7 +96,7 @@
   height: 400px;
   overflow: hidden;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
 }
 
 .carousel-image {
@@ -230,6 +230,227 @@
 .main-content-row{
   background: #fffffff7;
 }
+
+
+/* profile section for provider */
+
+/* Modern Airbnb-style Provider Profile */
+/* .provider-profile-modern {
+  padding: 2rem 0;
+  border-top: 1px solid #ebebeb;
+  border-bottom: 1px solid #ebebeb;
+  margin: 2rem 0;
+}
+
+.profile-avatar-modern img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid #f0f0f0;
+}
+
+.profile-details-modern h3 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.contact-info-modern {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.contact-info-modern svg {
+  font-size: 1rem;
+}
+
+.skills-modern {
+  padding-top: 1rem;
+}
+
+.skill-badge-modern {
+  background-color: #f7f7f7;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.skill-badge-modern:hover {
+  background-color: #e0e0e0;
+}
+
+.social-links-modern {
+  padding-top: 1rem;
+}
+
+.social-icon-modern {
+  font-size: 1.5rem;
+  color: #717171;
+  transition: all 0.2s ease;
+}
+
+.social-icon-modern:hover {
+  color: #ff385c;
+  transform: scale(1.1);
+}
+
+
+@media (max-width: 768px) {
+  .profile-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .contact-info-modern {
+    justify-content: center;
+  }
+  
+  .skills-modern {
+    text-align: center;
+  }
+  
+  .social-links-modern {
+    text-align: center;
+  }
+}
+
+
+
+.contact-info-modern {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.contact-info-modern > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+} */
+
+
+
+/* Provider Profile Card Styles */
+.provider-profile-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: none;
+}
+
+.profile-image-container {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.time-on-platform {
+  display: flex;
+  align-items: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #495057;
+}
+
+.detail-icon {
+  color: #6c757d;
+  min-width: 20px;
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-pill {
+  padding: 0.5em 1em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.skill-pill:hover {
+  background-color: #e9ecef !important;
+  transform: translateY(-2px);
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-icon {
+  font-size: 1.5rem;
+  color: #6c757d;
+  transition: all 0.2s ease;
+}
+
+.social-icon:hover {
+  color: #0d6efd;
+  transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-image-container {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-row{
+  background: inherit;
+}
+
+.map-card{
+ background: inherit;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* .container{ */
   /* background-color: #0d6efd; */
